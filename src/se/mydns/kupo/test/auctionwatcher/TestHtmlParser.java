@@ -36,11 +36,12 @@ public class TestHtmlParser {
             if (item.isEmpty())
                 continue;
 
-            System.out.print("Time: " + item.get(0));
-            System.out.print(", Seller: " + item.get(1));
-            System.out.print(", Auction: " + item.get(2));
-            System.out.println();
+//            System.out.print("Time: " + item.get(0));
+//            System.out.print(", Seller: " + item.get(1));
+//            System.out.print(", Auction: " + item.get(2));
+//            System.out.println();
+
         }
-//        Assert.assertNotNull(map);
+        Assert.assertFalse(list.isEmpty());
     }
 }
