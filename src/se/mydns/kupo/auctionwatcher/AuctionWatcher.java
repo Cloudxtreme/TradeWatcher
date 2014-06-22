@@ -18,9 +18,8 @@ public class AuctionWatcher {
     }
 
     private void parse() {
-        String html = blob.toString();
+        System.out.println(blob.toString());
 
-        System.out.println(html);
     }
 
     private void setup() {
@@ -46,7 +45,6 @@ public class AuctionWatcher {
                 blob.append(inputLine);
                 blob.append("\n");
             }
-            System.out.println(blob.toString());
         }
         catch (Exception e) { e.printStackTrace(); }
     }
