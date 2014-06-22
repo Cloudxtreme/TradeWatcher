@@ -38,16 +38,18 @@ public class AuctionWatcher {
 
             connection.setDoInput(true); // We want to use this connection for both input and output
             connection.setDoOutput(true);
+            connection.setReadTimeout(10000);
 
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-//            BufferedReader in = new BufferedReader(new InputStreamReader(ahungry.openStream()));
-//
-//            String inputLine;
-//            while((inputLine = in.readLine()) != null)  {
-//                blob.append(inputLine);
-//            }
-//
-//            in.close();
+            String resp = connection.getResponseMessage();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+            String inputLine;
+            while((inputLine = in.readLine()) != null)  {
+                blob.append(inputLine);
+            }
+
         }
         catch (Exception e) { e.printStackTrace(); }
     }
