@@ -4,13 +4,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by oskurot on 2014-06-22.
  */
 public class AuctionWatcher {
 
-    private StringBuilder blob = new StringBuilder();
+    private ArrayList<String> lines = new ArrayList<>();
 
     public AuctionWatcher() {
         setup();
@@ -18,7 +19,7 @@ public class AuctionWatcher {
     }
 
     private void parse() {
-        System.out.println(blob.toString());
+
 
     }
 
@@ -42,8 +43,7 @@ public class AuctionWatcher {
 
             String inputLine;
             while((inputLine = in.readLine()) != null)  {
-                blob.append(inputLine);
-                blob.append("\n");
+                lines.add(inputLine);
             }
         }
         catch (Exception e) { e.printStackTrace(); }

@@ -1,17 +1,19 @@
 package se.mydns.kupo.test.auctionwatcher;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.mydns.kupo.auctionwatcher.AuctionParser;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 /**
  * Created by oskurot on 22/06/14.
  */
 public class TestHtmlParser {
-    private StringBuilder blob = new StringBuilder();
+    private ArrayList<String> lines = new ArrayList<>();
 
     @Before
     public void setUp() {
@@ -20,14 +22,25 @@ public class TestHtmlParser {
 
             String inputLine;
             while((inputLine = in.readLine()) != null)  {
-                blob.append(inputLine);
-                blob.append("\n");
+                lines.add(inputLine);
             }
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     @Test
     public void testHtmlParser() {
-        System.out.println(blob.toString());
+        AuctionParser parser = new AuctionParser();
+        ArrayList<ArrayList<String>> list = parser.parse(lines);
+
+        for(ArrayList item : list) {
+            if (item.isEmpty())
+                continue;
+
+            System.out.print("Time: " + item.get(0));
+            System.out.print(", Seller: " + item.get(1));
+            System.out.print(", Auction: " + item.get(2));
+            System.out.println();
+        }
+//        Assert.assertNotNull(map);
     }
 }
