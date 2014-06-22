@@ -1,3 +1,4 @@
+package se.mydns.kupo.auctionwatcher;
 import sun.net.www.http.HttpClient;
 
 import java.io.BufferedReader;
