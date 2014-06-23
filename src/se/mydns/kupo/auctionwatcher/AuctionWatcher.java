@@ -16,6 +16,11 @@ public class AuctionWatcher {
     public AuctionWatcher() {
         setup();
         parse();
+        match();
+    }
+
+    private void match() {
+
     }
 
     private void parse() {
