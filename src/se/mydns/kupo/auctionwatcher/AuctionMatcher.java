@@ -60,10 +60,13 @@ public class AuctionMatcher {
 
         for(HashMap<String,String> auc : feed) {
             for(String p : sellingList) {
-                Pattern pattern = Pattern.compile(p);
-                Matcher m = pattern.matcher(auc.get("Auction"));
-                if (m.find()) {
-                    matches.add(auc);
+                Pattern pattern = Pattern.compile(".*WTB.*" + p);
+                String line = auc.get("Auction");
+                if (line != null) {
+                    Matcher m = pattern.matcher(line);
+                    if (m.find()) {
+                        matches.add(auc);
+                    }
                 }
             }
         }
@@ -75,7 +78,7 @@ public class AuctionMatcher {
 
         for(HashMap<String,String> auc : feed) {
             for(String p : shoppingList) {
-                Pattern pattern = Pattern.compile(p);
+                Pattern pattern = Pattern.compile(".*WTS.*" + p);
                 String line = auc.get("Auction");
                 if (line != null) {
                     Matcher m = pattern.matcher(line);

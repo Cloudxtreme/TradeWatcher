@@ -34,12 +34,29 @@ public class TestAuctionMatcher {
     }
 
     @Test
-    public void testAuctionMatcher() {
+    public void testWTSMatcher() {
         AuctionMatcher matcher = new AuctionMatcher();
 
         matcher.addShoppingPattern("Cobalt Breastplate");
 
         ArrayList<HashMap<String,String>> matches = matcher.checkShopping(auctionFeed);
+
+        if(matches.size() > 0) {
+            for(HashMap<String,String> match : matches) {
+                System.out.println(match.get("Auction"));
+            }
+        } else {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testWTBMatcher() {
+        AuctionMatcher matcher = new AuctionMatcher();
+
+        matcher.addSellingPattern("Impskin");
+
+        ArrayList<HashMap<String,String>> matches = matcher.checkSelling(auctionFeed);
 
         if(matches.size() > 0) {
             for(HashMap<String,String> match : matches) {
