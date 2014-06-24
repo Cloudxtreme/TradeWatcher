@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
  */
 public class WatchListFrame implements Runnable {
     private Image trayImage = Toolkit.getDefaultToolkit().getImage(".\\res\\eq.gif");
-
+    private JFrame frame;
     public WatchListFrame() {
         run();
     }
@@ -18,22 +18,36 @@ public class WatchListFrame implements Runnable {
 
     public void run() {
         /** New shiny window **/
-        JFrame frame = new JFrame("Project 1999 Auction Watcher");
-        frame.setPreferredSize(new Dimension(200, 100));
+        frame = new JFrame("Project 1999 Trade Watcher");
+        frame.setPreferredSize(new Dimension(500, 350));
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\eq.png"));
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         /** Layout **/
         GridLayout gridLayout = new GridLayout(0,2);
-        frame.setLayout(gridLayout);
-        JPanel leftPanel = new JPanel();
-        leftPanel.setBackground(Color.blue);
-        JPanel rightPanel = new JPanel();
-        rightPanel.setBackground(Color.red);
+        GridLayout panelGrid = new GridLayout(3,0);
 
+        frame.setLayout(gridLayout);
+        Panel leftPanel = new Panel();
+        leftPanel.setLayout(panelGrid);
+//        leftPanel.setBackground(Color.blue);
+
+        Panel rightPanel = new Panel();
+//        rightPanel.setBackground(Color.red);
         frame.add(leftPanel);
         frame.add(rightPanel);
+
+        Label wtsLabel = new Label("WTS");
+        leftPanel.add(wtsLabel);
+
+        List wtsList = new List();
+        wtsList.add("Cobalt Breastplate");
+        wtsList.add("Impskin");
+        leftPanel.add(wtsList);
+
+        Label wtbLabel = new Label("WTB");
+        rightPanel.add(wtbLabel);
         frame.pack();
         frame.setVisible(true);
 
@@ -44,15 +58,11 @@ public class WatchListFrame implements Runnable {
 
             ActionListener listener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-
+                    frame.setVisible(!frame.isVisible());
                 }
             };
 
-            PopupMenu popup = new PopupMenu();
-            MenuItem item = new MenuItem("A MenuItem");
-            popup.add(item);
-
-            trayIcon = new TrayIcon(trayImage, "ECLurker", popup);
+            trayIcon = new TrayIcon(trayImage, "Tradewatcher");
             trayIcon.setImageAutoSize(true);
             trayIcon.addActionListener(listener);
 
@@ -63,8 +73,6 @@ public class WatchListFrame implements Runnable {
                 e.printStackTrace();
             }
 
-
-//            trayIcon.displayMessage("Caption", "This is the message", TrayIcon.MessageType.INFO);
         } else {
             System.err.println("Tray unavailable");
         }
