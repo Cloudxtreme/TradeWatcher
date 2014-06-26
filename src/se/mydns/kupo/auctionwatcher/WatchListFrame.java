@@ -26,22 +26,25 @@ public class WatchListFrame implements Runnable {
 
         /** Layout **/
         frame.setLayout(new GridLayout(0,2));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = gbc.HORIZONTAL;
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         Panel leftPanel = new Panel();
-        leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.LINE_AXIS));
-//        leftPanel.setBackground(Color.blue);
-
         Panel rightPanel = new Panel();
-//        rightPanel.setBackground(Color.red);
-        frame.add(leftPanel);
-        frame.add(rightPanel);
+
+
+        frame.add(leftPanel, gbc);
+        frame.add(rightPanel, gbc);
 
         Label wtsLabel = new Label("WTS");
-        leftPanel.add(wtsLabel);
+        leftPanel.add(wtsLabel, gbc);
 
         List wtsList = new List();
         wtsList.add("Cobalt Breastplate");
         wtsList.add("Impskin");
-        leftPanel.add(wtsList);
+        leftPanel.add(wtsList, gbc);
 
         Label wtbLabel = new Label("WTB");
         rightPanel.add(wtbLabel);
@@ -76,8 +79,8 @@ public class WatchListFrame implements Runnable {
 
     }
 
-    public static void main(String[] args) {
-        new WatchListFrame();
-    }
+//    public static void main(String[] args) {
+//        new WatchListFrame();
+//    }
 }
 

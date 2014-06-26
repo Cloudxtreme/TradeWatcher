@@ -55,7 +55,7 @@ public class AuctionMatcher {
         return -1;
     }
 
-    public ArrayList checkSelling(ArrayList<HashMap<String,String>> feed) {
+    public ArrayList<HashMap<String,String>> checkSelling(ArrayList<HashMap<String,String>> feed) {
         ArrayList<HashMap<String,String>> matches = new ArrayList<>();
 
         for(HashMap<String,String> auc : feed) {

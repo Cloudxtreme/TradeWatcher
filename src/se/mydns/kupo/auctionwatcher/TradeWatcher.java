@@ -17,7 +17,7 @@ public class TradeWatcher {
     private ArrayList<HashMap<String,String>> auctions = new ArrayList<>();
     private AuctionMatcher matcher = new AuctionMatcher();
     private AuctionParser parser = new AuctionParser();
-    private boolean continueMatching = true;
+    private boolean continueMatching = false;
     private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
     private WatchListFrame frame;
 
@@ -48,10 +48,13 @@ public class TradeWatcher {
                 matches.clear();
                 matchFound = true;
             }
+
             if(!matchFound)
                 System.out.println("No matches found.");
+
             System.out.println("Sleeping for 30 seconds.");
             try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
+
             getAuctionFeed();
             parse();
         }
@@ -66,13 +69,12 @@ public class TradeWatcher {
 
     private void parse() {
         auctions.clear();
-        System.out.println("Parsing html");
-        auctions = parser.parse(lines);
+//        auctions = parser.parse(lines);
     }
 
     private void setup() {
         populateMatcher();
-        getAuctionFeed();
+//        getAuctionFeed();
         frame = new WatchListFrame();
     }
 

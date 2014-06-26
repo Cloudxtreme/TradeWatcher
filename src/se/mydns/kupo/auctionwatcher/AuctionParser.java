@@ -13,7 +13,8 @@ public class AuctionParser {
 //    private ArrayList<ArrayList<String>> auctionItems = new ArrayList<>();
     private String[] aucLines;
 
-    public ArrayList parse(ArrayList<String> lines) {
+    public ArrayList<HashMap<String, String>> parse(ArrayList<String> lines) {
+        System.out.println("Parsing html");
         for(String line : lines) {
             if(line.contains("<div class='auc'>")) {
                 aucLines = line.split("div class='auc'>");
