@@ -25,12 +25,9 @@ public class WatchListFrame implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         /** Layout **/
-        GridLayout gridLayout = new GridLayout(0,2);
-        GridLayout panelGrid = new GridLayout(3,0);
-
-        frame.setLayout(gridLayout);
+        frame.setLayout(new GridLayout(0,2));
         Panel leftPanel = new Panel();
-        leftPanel.setLayout(panelGrid);
+        leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.LINE_AXIS));
 //        leftPanel.setBackground(Color.blue);
 
         Panel rightPanel = new Panel();
