@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by oskurot on 2014-06-22.
+ * Parses ahungrys html page and puts everything in a list
  */
 public class AuctionParser {
     private ArrayList<HashMap<String, String>> auctionLines = new ArrayList<>();

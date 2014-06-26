@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by oskurot on 2014-06-23.
+ * GUI for the TradeWatcher
  */
 public class WatchListFrame implements Runnable {
     private Image trayImage = Toolkit.getDefaultToolkit().getImage(".\\res\\eq.gif");

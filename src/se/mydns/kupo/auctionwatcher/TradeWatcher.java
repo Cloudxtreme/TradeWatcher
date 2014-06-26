@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by oskurot on 2014-06-22.
+ * Main class for TradeWatcher
  */
 public class TradeWatcher {
 
@@ -80,7 +80,7 @@ public class TradeWatcher {
             br = new BufferedReader(new FileReader(".\\res\\sell.txt"));
             String line;
             while ((line = br.readLine()) != null) {
-                System.out.println("Adding " + line + "to sell list");
+                System.out.println("Adding " + line + " to sell list");
                 matcher.addSellingPattern(line);
             }
             br.close();

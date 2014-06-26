@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by oskurot on 2014-06-23.
+ * Keeps track of what should be looked for and does the actual matching.
  */
 public class AuctionMatcher {
     private ArrayList<String> shoppingList = new ArrayList<>();

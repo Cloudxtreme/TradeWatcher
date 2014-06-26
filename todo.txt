@@ -1,0 +1,5 @@
+- Finish GUI
+- Add timestamp to event
+- Possibility to add and remove items on the fly
+- Remember old matches and only notify on new
+- notification! With or without sound.
