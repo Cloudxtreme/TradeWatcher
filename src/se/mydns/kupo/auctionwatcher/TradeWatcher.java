@@ -1,5 +1,6 @@
 package se.mydns.kupo.auctionwatcher;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -17,9 +18,13 @@ public class TradeWatcher {
     private ArrayList<HashMap<String,String>> auctions = new ArrayList<>();
     private AuctionMatcher matcher = new AuctionMatcher();
     private AuctionParser parser = new AuctionParser();
-    private boolean continueMatching = false;
+    private boolean continueMatching = true;
     private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
     private WatchListFrame frame;
+    private List statusBar;
+    private List itemList;
+    private List matchList;
+    private TrayIcon tray;
 
     public TradeWatcher() {
         setup();
@@ -29,30 +34,23 @@ public class TradeWatcher {
 
     private void match() {
         matches.clear();
-        boolean matchFound;
+
         while(continueMatching) {
-            matchFound = false;
-            System.out.println("Matching patterns");
+
+            statusBar.add("Matching patterns");
             matches = matcher.checkSelling(auctions);
             if(!matches.isEmpty()) {
-                System.out.println("Buyers matching your criteria:");
                 printMatches();
                 matches.clear();
-                matchFound = true;
+
             }
 
             matches = matcher.checkShopping(auctions);
             if(!matches.isEmpty()) {
-                System.out.println("Sales matching your criteria:");
                 printMatches();
                 matches.clear();
-                matchFound = true;
             }
 
-            if(!matchFound)
-                System.out.println("No matches found.");
-
-            System.out.println("Sleeping for 30 seconds.");
             try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
 
             getAuctionFeed();
@@ -63,19 +61,25 @@ public class TradeWatcher {
 
     private void printMatches() {
         for(HashMap<String, String> match : matches) {
-            System.out.println(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
+            matchList.add(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
+            tray.displayMessage("Match found!", match.get("Auction"), TrayIcon.MessageType.INFO);
+
         }
     }
 
     private void parse() {
         auctions.clear();
-//        auctions = parser.parse(lines);
+        auctions = parser.parse(lines);
     }
 
     private void setup() {
-        populateMatcher();
-//        getAuctionFeed();
         frame = new WatchListFrame();
+        statusBar = frame.getStatusBar();
+        itemList = frame.getItemList();
+        matchList = frame.getMatchList();
+        tray = frame.getSystemTray();
+        populateMatcher();
+        getAuctionFeed();
     }
 
     private void populateMatcher() {
@@ -84,14 +88,14 @@ public class TradeWatcher {
             br = new BufferedReader(new FileReader(".\\res\\sell.txt"));
             String line;
             while ((line = br.readLine()) != null) {
-                System.out.println("Adding " + line + " to sell list");
+                itemList.add("[WTS] " + line);
                 matcher.addSellingPattern(line);
             }
             br.close();
 
             br = new BufferedReader(new FileReader(".\\res\\buy.txt"));
             while ((line = br.readLine()) != null) {
-                System.out.println("Adding " + line + " to buy list");
+                itemList.add("[WTB] " + line);
                 matcher.addShoppingPattern(line);
             }
             br.close();
@@ -104,7 +108,7 @@ public class TradeWatcher {
         URL ahungry;
         lines.clear();
         try {
-            System.out.println("Getting auction feed...");
+            statusBar.add("Getting auction feed...");
             ahungry = new URL("http://ahungry.com/eqauctions/?");
             HttpURLConnection connection = (HttpURLConnection) ahungry.openConnection();
 

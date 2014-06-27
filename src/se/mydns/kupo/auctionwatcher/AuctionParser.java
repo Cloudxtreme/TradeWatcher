@@ -14,12 +14,15 @@ public class AuctionParser {
     private String[] aucLines;
 
     public ArrayList<HashMap<String, String>> parse(ArrayList<String> lines) {
-        System.out.println("Parsing html");
+//        System.out.println("Parsing html");
         for(String line : lines) {
             if(line.contains("<div class='auc'>")) {
                 aucLines = line.split("div class='auc'>");
             }
         }
+
+        if(aucLines == null)
+            return auctionLines;
 
         for(String item : aucLines) {
             // temp stores time, seller, auction line

@@ -11,6 +11,12 @@ import java.awt.event.ActionListener;
 public class WatchListFrame implements Runnable {
     private Image trayImage = Toolkit.getDefaultToolkit().getImage(".\\res\\eq.gif");
     private JFrame frame;
+    private List statusBar;
+    private List itemList;
+    private List eventList;
+    private SystemTray tray;
+    TrayIcon trayIcon;
+
     public WatchListFrame() {
         run();
     }
@@ -19,42 +25,65 @@ public class WatchListFrame implements Runnable {
     public void run() {
         /** New shiny window **/
         frame = new JFrame("Project 1999 Trade Watcher");
-        frame.setPreferredSize(new Dimension(500, 350));
+        frame.setPreferredSize(new Dimension(600, 350));
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\eq.png"));
-        frame.setLocationRelativeTo(null);
+//        frame.setLocationRelativeTo(null);
+        frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
         /** Layout **/
-        frame.setLayout(new GridLayout(0,2));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = gbc.HORIZONTAL;
-        gbc.insets = new Insets(2,2,2,2);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
+        BorderLayout layout = new BorderLayout(5,5);
+        frame.setLayout(layout);
+
+//        frame.validate();
+
+        /** Panels for the borderlayout **/
+        Panel topPanel = new Panel(new BorderLayout());
+        Panel bottomPanel = new Panel();
         Panel leftPanel = new Panel();
+        leftPanel.setPreferredSize(new Dimension(200,350));
         Panel rightPanel = new Panel();
 
 
-        frame.add(leftPanel, gbc);
-        frame.add(rightPanel, gbc);
 
+//        frame.remove(layout.getLayoutComponent(BorderLayout.CENTER));
+        frame.add(leftPanel, BorderLayout.WEST);
+        frame.add(rightPanel, BorderLayout.CENTER);
+        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+
+        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        leftPanel.setLayout(new BorderLayout());
+        rightPanel.setLayout(new BorderLayout());
+        bottomPanel.setLayout(new BorderLayout());
+
+
+        /** Labels for WTB,WTS **/
         Label wtsLabel = new Label("WTS");
-        leftPanel.add(wtsLabel, gbc);
-
-        List wtsList = new List();
-        wtsList.add("Cobalt Breastplate");
-        wtsList.add("Impskin");
-        leftPanel.add(wtsList, gbc);
-
+        topPanel.add(wtsLabel);
         Label wtbLabel = new Label("WTB");
-        rightPanel.add(wtbLabel);
+        topPanel.add(wtbLabel);
+
+        /** Lists for items and matches **/
+        itemList = new List();
+        leftPanel.add(itemList, BorderLayout.CENTER);
+        itemList.setPreferredSize(leftPanel.getPreferredSize());
+        eventList = new List();
+        rightPanel.add(eventList, BorderLayout.CENTER);
+        eventList.setPreferredSize(rightPanel.getPreferredSize());
+
+        /** Status bar **/
+        statusBar = new List();
+        statusBar.setPreferredSize(bottomPanel.getPreferredSize());
+        bottomPanel.add(statusBar, BorderLayout.CENTER);
+
         frame.pack();
         frame.setVisible(true);
 
         /** System tray **/
-        TrayIcon trayIcon = null;
         if(SystemTray.isSupported()) {
-            SystemTray tray = SystemTray.getSystemTray();
+            tray = SystemTray.getSystemTray();
 
             ActionListener listener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -77,6 +106,22 @@ public class WatchListFrame implements Runnable {
             System.err.println("Tray unavailable");
         }
 
+    }
+
+    public List getStatusBar() {
+        return statusBar;
+    }
+
+    public List getItemList() {
+        return itemList;
+    }
+
+    public List getMatchList() {
+        return eventList;
+    }
+
+    public TrayIcon getSystemTray() {
+        return trayIcon;
     }
 
 //    public static void main(String[] args) {
