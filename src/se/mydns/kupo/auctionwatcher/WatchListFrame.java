@@ -13,7 +13,7 @@ public class WatchListFrame implements Runnable {
     private JFrame frame;
     private List statusBar;
     private List itemList;
-    private List eventList;
+    private List matchList;
     private SystemTray tray;
     TrayIcon trayIcon;
 
@@ -23,20 +23,49 @@ public class WatchListFrame implements Runnable {
 
 
     public void run() {
+        setupWindow();
+        setupSystemTray();
+    }
+
+    private void setupSystemTray() {
+        /** System tray **/
+        if(SystemTray.isSupported()) {
+            tray = SystemTray.getSystemTray();
+
+            ActionListener listener = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    frame.setVisible(!frame.isVisible());
+                }
+            };
+
+            trayIcon = new TrayIcon(trayImage, "Tradewatcher");
+            trayIcon.setImageAutoSize(true);
+            trayIcon.addActionListener(listener);
+
+
+            try {
+                tray.add(trayIcon);
+            } catch (AWTException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(frame, "Could not get system tray. Popup notification will be unavailable.", "System Tray Not Found", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void setupWindow() {
         /** New shiny window **/
         frame = new JFrame("Project 1999 Trade Watcher");
         frame.setPreferredSize(new Dimension(600, 350));
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\eq.png"));
 //        frame.setLocationRelativeTo(null);
         frame.setLocationByPlatform(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         /** Layout **/
         BorderLayout layout = new BorderLayout(5,5);
         frame.setLayout(layout);
-
-//        frame.validate();
 
         /** Panels for the borderlayout **/
         Panel topPanel = new Panel(new BorderLayout());
@@ -44,8 +73,6 @@ public class WatchListFrame implements Runnable {
         Panel leftPanel = new Panel();
         leftPanel.setPreferredSize(new Dimension(200,350));
         Panel rightPanel = new Panel();
-
-
 
 //        frame.remove(layout.getLayoutComponent(BorderLayout.CENTER));
         frame.add(leftPanel, BorderLayout.WEST);
@@ -69,9 +96,9 @@ public class WatchListFrame implements Runnable {
         itemList = new List();
         leftPanel.add(itemList, BorderLayout.CENTER);
         itemList.setPreferredSize(leftPanel.getPreferredSize());
-        eventList = new List();
-        rightPanel.add(eventList, BorderLayout.CENTER);
-        eventList.setPreferredSize(rightPanel.getPreferredSize());
+        matchList = new List();
+        rightPanel.add(matchList, BorderLayout.CENTER);
+        matchList.setPreferredSize(rightPanel.getPreferredSize());
 
         /** Status bar **/
         statusBar = new List();
@@ -80,52 +107,26 @@ public class WatchListFrame implements Runnable {
 
         frame.pack();
         frame.setVisible(true);
-
-        /** System tray **/
-        if(SystemTray.isSupported()) {
-            tray = SystemTray.getSystemTray();
-
-            ActionListener listener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    frame.setVisible(!frame.isVisible());
-                }
-            };
-
-            trayIcon = new TrayIcon(trayImage, "Tradewatcher");
-            trayIcon.setImageAutoSize(true);
-            trayIcon.addActionListener(listener);
-
-
-            try {
-                tray.add(trayIcon);
-            } catch (AWTException e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            JOptionPane.showMessageDialog(frame, "Could not get system tray. Popup notification will be unavailable.", "System Tray Not Found",JOptionPane.OK_OPTION);
-        }
-
     }
 
-    public List getStatusBar() {
-        return statusBar;
+    public void addStatus(String message) {
+        statusBar.add(message);
     }
 
-    public List getItemList() {
-        return itemList;
+    public void addSellItem(String item) {
+        itemList.add("[WTS] " + item);
     }
 
-    public List getMatchList() {
-        return eventList;
+    public void addBuyItem(String item) {
+        itemList.add("[WTB] " + item);
     }
 
-    public TrayIcon getSystemTray() {
-        return trayIcon;
+    public void addMatch(String match) {
+        matchList.add(match);
     }
 
-//    public static void main(String[] args) {
-//        new WatchListFrame();
-//    }
+    public void notify(String auction) {
+        trayIcon.displayMessage("Match found!", auction, TrayIcon.MessageType.INFO);
+    }
 }
 

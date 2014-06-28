@@ -1,13 +1,10 @@
 package se.mydns.kupo.auctionwatcher;
 
-import java.awt.*;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +21,6 @@ public class TradeWatcher {
     private boolean continueMatching = true;
     private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
     private WatchListFrame frame;
-    private List statusBar;
-    private List itemList;
-    private List matchList;
-    private TrayIcon tray;
 
     public TradeWatcher() {
         setup();
@@ -39,18 +32,17 @@ public class TradeWatcher {
         matches.clear();
 
         while(continueMatching) {
-
-            statusBar.add("Matching patterns");
+            frame.addStatus("Matching patterns.");
             matches = matcher.checkSelling(auctions);
             if(!matches.isEmpty()) {
-                printMatches();
+                addMatches();
                 matches.clear();
 
             }
 
             matches = matcher.checkShopping(auctions);
             if(!matches.isEmpty()) {
-                printMatches();
+                addMatches();
                 matches.clear();
             }
 
@@ -62,11 +54,10 @@ public class TradeWatcher {
 
     }
 
-    private void printMatches() {
+    private void addMatches() {
         for(HashMap<String, String> match : matches) {
-            matchList.add(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
-            tray.displayMessage("Match found!", match.get("Auction"), TrayIcon.MessageType.INFO);
-
+            frame.addMatch(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
+            frame.notify(match.get("Auction"));
         }
     }
 
@@ -77,10 +68,6 @@ public class TradeWatcher {
 
     private void setup() {
         frame = new WatchListFrame();
-        statusBar = frame.getStatusBar();
-        itemList = frame.getItemList();
-        matchList = frame.getMatchList();
-        tray = frame.getSystemTray();
         populateMatcher();
         getAuctionFeed();
     }
@@ -92,14 +79,14 @@ public class TradeWatcher {
             br = new BufferedReader(new FileReader("." + slash + "res" + slash + "sell.txt"));
             String line;
             while ((line = br.readLine()) != null) {
-                itemList.add("[WTS] " + line);
+                frame.addSellItem(line);
                 matcher.addSellingPattern(line);
             }
             br.close();
 
             br = new BufferedReader(new FileReader("." + slash + "res" + slash + "buy.txt"));
             while ((line = br.readLine()) != null) {
-                itemList.add("[WTB] " + line);
+                frame.addBuyItem(line);
                 matcher.addShoppingPattern(line);
             }
             br.close();
@@ -112,7 +99,7 @@ public class TradeWatcher {
         URL ahungry;
         lines.clear();
         try {
-            statusBar.add("Getting auction feed...");
+            frame.addStatus("Getting auction feed...");
             ahungry = new URL("http://ahungry.com/eqauctions/?");
             HttpURLConnection connection = (HttpURLConnection) ahungry.openConnection();
 
