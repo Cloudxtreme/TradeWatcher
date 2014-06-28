@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
  * Keeps track of what should be looked for and does the actual matching.
  */
 public class AuctionMatcher {
-    private ArrayList<String> shoppingList = new ArrayList<>();
-    private ArrayList<String> sellingList = new ArrayList<>();
+    private final ArrayList<String> shoppingList = new ArrayList<>();
+    private final ArrayList<String> sellingList = new ArrayList<>();
 //    private ArrayList<ArrayList<String>> auctionFeed = new ArrayList<>();
 
     /** Checks for duplicates and adds if none are found **/

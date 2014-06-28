@@ -8,14 +8,13 @@ import java.awt.event.ActionListener;
 /**
  * GUI for the TradeWatcher
  */
-public class WatchListFrame implements Runnable {
-    private Image trayImage = Toolkit.getDefaultToolkit().getImage(".\\res\\eq.gif");
+class WatchListFrame implements Runnable {
+    private final Image trayImage = Toolkit.getDefaultToolkit().getImage(".\\res\\eq.gif");
     private JFrame frame;
     private List statusBar;
     private List itemList;
     private List matchList;
-    private SystemTray tray;
-    TrayIcon trayIcon;
+    private TrayIcon trayIcon;
 
     public WatchListFrame() {
         run();
@@ -30,7 +29,7 @@ public class WatchListFrame implements Runnable {
     private void setupSystemTray() {
         /** System tray **/
         if(SystemTray.isSupported()) {
-            tray = SystemTray.getSystemTray();
+            SystemTray tray = SystemTray.getSystemTray();
 
             ActionListener listener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Parses ahungrys html page and puts everything in a list
  */
 public class AuctionParser {
-    private ArrayList<HashMap<String, String>> auctionLines = new ArrayList<>();
+    private final ArrayList<HashMap<String, String>> auctionLines = new ArrayList<>();
 //    private ArrayList<ArrayList<String>> auctionItems = new ArrayList<>();
     private String[] aucLines;
 

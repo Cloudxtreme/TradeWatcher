@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Created by oskurot on 2014-06-23.
  */
 public class TestAuctionMatcher {
-    private ArrayList<String> lines = new ArrayList<>();
+    private final ArrayList<String> lines = new ArrayList<>();
     private ArrayList<HashMap<String,String>> auctionFeed = new ArrayList<>();
 
     @Before

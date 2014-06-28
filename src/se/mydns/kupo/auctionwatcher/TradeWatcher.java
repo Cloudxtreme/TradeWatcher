@@ -12,17 +12,16 @@ import java.util.HashMap;
 /**
  * Main class for TradeWatcher
  */
-public class TradeWatcher {
+class TradeWatcher {
 
-    private ArrayList<String> lines = new ArrayList<>();
+    private final ArrayList<String> lines = new ArrayList<>();
     private ArrayList<HashMap<String,String>> auctions = new ArrayList<>();
-    private AuctionMatcher matcher = new AuctionMatcher();
-    private AuctionParser parser = new AuctionParser();
-    private boolean continueMatching = true;
+    private final AuctionMatcher matcher = new AuctionMatcher();
+    private final AuctionParser parser = new AuctionParser();
     private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
     private WatchListFrame frame;
 
-    public TradeWatcher() {
+    private TradeWatcher() {
         setup();
         parse();
         match();
@@ -30,8 +29,7 @@ public class TradeWatcher {
 
     private void match() {
         matches.clear();
-
-        while(continueMatching) {
+        while(true) {
             frame.addStatus("Matching patterns.");
             matches = matcher.checkSelling(auctions);
             if(!matches.isEmpty()) {

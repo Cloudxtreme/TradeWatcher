@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Created by oskurot on 22/06/14.
  */
 public class TestHtmlParser {
-    private ArrayList<String> lines = new ArrayList<>();
+    private final ArrayList<String> lines = new ArrayList<>();
 
     @Before
     public void setUp() {
