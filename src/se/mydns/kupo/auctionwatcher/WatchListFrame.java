@@ -103,7 +103,7 @@ public class WatchListFrame implements Runnable {
             }
 
         } else {
-            System.err.println("Tray unavailable");
+            JOptionPane.showMessageDialog(frame, "Could not get system tray. Popup notification will be unavailable.", "System Tray Not Found",JOptionPane.OK_OPTION);
         }
 
     }

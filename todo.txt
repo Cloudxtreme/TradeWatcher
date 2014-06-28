@@ -1,5 +1,6 @@
+- Start/Stop looking toggle?
 - Finish GUI
-- Add timestamp to event
+- Add timestamp to events
 - Possibility to add and remove items on the fly
 - Remember old matches and only notify on new
 - notification! With or without sound.

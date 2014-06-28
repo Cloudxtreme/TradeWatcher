@@ -2,10 +2,13 @@ package se.mydns.kupo.auctionwatcher;
 
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -83,9 +86,10 @@ public class TradeWatcher {
     }
 
     private void populateMatcher() {
+        String slash = FileSystems.getDefault().getSeparator();
         BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(".\\res\\sell.txt"));
+            br = new BufferedReader(new FileReader("." + slash + "res" + slash + "sell.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 itemList.add("[WTS] " + line);
@@ -93,7 +97,7 @@ public class TradeWatcher {
             }
             br.close();
 
-            br = new BufferedReader(new FileReader(".\\res\\buy.txt"));
+            br = new BufferedReader(new FileReader("." + slash + "res" + slash + "buy.txt"));
             while ((line = br.readLine()) != null) {
                 itemList.add("[WTB] " + line);
                 matcher.addShoppingPattern(line);
