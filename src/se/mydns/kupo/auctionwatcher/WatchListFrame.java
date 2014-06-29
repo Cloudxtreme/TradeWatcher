@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.FileSystems;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,11 +12,12 @@ import java.util.Date;
  * GUI for the TradeWatcher
  */
 class WatchListFrame implements Runnable {
-    private String slash = FileSystems.getDefault().getSeparator();
+    private final String slash = FileSystems.getDefault().getSeparator();
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
     private JFrame frame;
     private List statusBar;
     private List itemList;
+    private List wtbList;
     private List matchList;
     private TrayIcon trayIcon;
 
@@ -70,7 +70,17 @@ class WatchListFrame implements Runnable {
         BorderLayout layout = new BorderLayout(5,5);
         frame.setLayout(layout);
 
+        /** Options menu **/
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("File");
+        menuBar.add(menu);
+        JMenuItem optionsMenuItem = new JMenuItem("Options");
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        menu.add(optionsMenuItem);
+        menu.add(exitMenuItem);
+
         /** Panels for the borderlayout **/
+        JTabbedPane tabs = new JTabbedPane();
         Panel topPanel = new Panel(new BorderLayout());
         Panel bottomPanel = new Panel();
         Panel leftPanel = new Panel();
@@ -81,26 +91,24 @@ class WatchListFrame implements Runnable {
         frame.add(rightPanel, BorderLayout.CENTER);
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
+        frame.setJMenuBar(menuBar);
 
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setLayout(new BorderLayout());
         rightPanel.setLayout(new BorderLayout());
         bottomPanel.setLayout(new BorderLayout());
 
-
-        /** Labels for WTB,WTS **/
-        Label wtsLabel = new Label("WTS");
-        topPanel.add(wtsLabel);
-        Label wtbLabel = new Label("WTB");
-        topPanel.add(wtbLabel);
-
         /** Lists for items and matches **/
         itemList = new List();
-        leftPanel.add(itemList, BorderLayout.CENTER);
-        itemList.setPreferredSize(leftPanel.getPreferredSize());
+        wtbList = new List();
+//        leftPanel.add(itemList, BorderLayout.CENTER);
+//        itemList.setPreferredSize(leftPanel.getPreferredSize());
         matchList = new List();
         rightPanel.add(matchList, BorderLayout.CENTER);
         matchList.setPreferredSize(rightPanel.getPreferredSize());
+        tabs.addTab("WTS", itemList);
+        tabs.addTab("WTB", wtbList);
+        leftPanel.add(tabs, BorderLayout.CENTER);
 
         /** Status bar **/
         statusBar = new List();

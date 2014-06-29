@@ -1,7 +1,13 @@
 - Add "Start/Stop looking" toggle
+- Add "Matches" label to gui
+- Add timestamps to matches list entries
 - Clickable WTS/WTB tabs
 - "Add/Remove item" popup/button
-- Add timestamps to statusbar
 - Remember old matches and only notify on new
 - Ability to clear old matches. (cleared on age as well?)
-- Add notification sound (toggleable)
+- Add notification sound option
+- Add options menu
+- Add overlay option
+
+DONE:
+- Add timestamps to statusbar

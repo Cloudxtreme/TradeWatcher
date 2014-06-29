@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 public class AuctionMatcher {
     private final ArrayList<String> shoppingList = new ArrayList<>();
     private final ArrayList<String> sellingList = new ArrayList<>();
-//    private ArrayList<ArrayList<String>> auctionFeed = new ArrayList<>();
 
     /** Checks for duplicates and adds if none are found **/
     public void addSellingPattern(String pattern) {
