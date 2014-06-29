@@ -7,16 +7,20 @@ import java.awt.event.ActionListener;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * GUI for the TradeWatcher
  */
 class WatchListFrame implements Runnable {
+    private Logger log = Logger.getLogger(TradeWatcher.class.getName());
     private final String slash = FileSystems.getDefault().getSeparator();
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
     private JFrame frame;
     private List statusBar;
-    private List itemList;
+    private List wtsList;
     private List wtbList;
     private List matchList;
     private TrayIcon trayIcon;
@@ -27,6 +31,12 @@ class WatchListFrame implements Runnable {
 
 
     public void run() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+        } catch (Exception e) {
+            log.log(Level.INFO, "Couldn't set system look and feel.");
+        }
         setupWindow();
         setupSystemTray();
     }
@@ -70,7 +80,7 @@ class WatchListFrame implements Runnable {
         BorderLayout layout = new BorderLayout(5,5);
         frame.setLayout(layout);
 
-        /** Options menu **/
+        /** Menubar **/
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
         menuBar.add(menu);
@@ -80,8 +90,6 @@ class WatchListFrame implements Runnable {
         menu.add(exitMenuItem);
 
         /** Panels for the borderlayout **/
-        JTabbedPane tabs = new JTabbedPane();
-        Panel topPanel = new Panel(new BorderLayout());
         Panel bottomPanel = new Panel();
         Panel leftPanel = new Panel();
         leftPanel.setPreferredSize(new Dimension(200,350));
@@ -89,24 +97,21 @@ class WatchListFrame implements Runnable {
 
         frame.add(leftPanel, BorderLayout.WEST);
         frame.add(rightPanel, BorderLayout.CENTER);
-        frame.add(topPanel, BorderLayout.NORTH);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         frame.setJMenuBar(menuBar);
 
-        topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setLayout(new BorderLayout());
         rightPanel.setLayout(new BorderLayout());
         bottomPanel.setLayout(new BorderLayout());
 
         /** Lists for items and matches **/
-        itemList = new List();
+        JTabbedPane tabs = new JTabbedPane();
+        wtsList = new List();
         wtbList = new List();
-//        leftPanel.add(itemList, BorderLayout.CENTER);
-//        itemList.setPreferredSize(leftPanel.getPreferredSize());
         matchList = new List();
         rightPanel.add(matchList, BorderLayout.CENTER);
         matchList.setPreferredSize(rightPanel.getPreferredSize());
-        tabs.addTab("WTS", itemList);
+        tabs.addTab("WTS", wtsList);
         tabs.addTab("WTB", wtbList);
         leftPanel.add(tabs, BorderLayout.CENTER);
 
@@ -127,15 +132,25 @@ class WatchListFrame implements Runnable {
     }
 
     public void addSellItem(String item) {
-        itemList.add("[WTS] " + item);
+        wtsList.add(item);
     }
 
+    public void delSellItem(String item) {
+        wtsList.remove(item);
+    }
+
+    public void delBuyItem(String item) {
+        wtbList.remove(item);
+    }
     public void addBuyItem(String item) {
-        itemList.add("[WTB] " + item);
+        wtbList.add(item);
     }
 
-    public void addMatch(String match) {
-        matchList.add(match);
+    public void addMatch(HashMap<String, String> match) {
+        Date date = new Date();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
+
+        matchList.add(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
     }
 
     public void notify(String auction) {

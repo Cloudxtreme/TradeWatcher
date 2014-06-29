@@ -54,7 +54,7 @@ class TradeWatcher {
 
     private void addMatches() {
         for(HashMap<String, String> match : matches) {
-            frame.addMatch(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
+            frame.addMatch(match);
             frame.notify(match.get("Auction"));
         }
     }
