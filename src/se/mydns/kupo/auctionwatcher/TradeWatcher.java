@@ -29,7 +29,7 @@ class TradeWatcher {
 
     private void match() {
         matches.clear();
-        boolean paus = true;
+        boolean paus = false;
         while(!paus) {
             getAuctionFeed();
             parse();

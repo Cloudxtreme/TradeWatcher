@@ -28,6 +28,7 @@ class WatchListFrame implements Runnable {
     private DefaultListModel<String> matchData = new DefaultListModel<>();
     private JList<ArrayList<String>> matchList;
     private TrayIcon trayIcon;
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
 
     public WatchListFrame() {
         run();
@@ -130,8 +131,6 @@ class WatchListFrame implements Runnable {
 
     public void addStatus(String message) {
         Date date = new Date();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
-
         statusBar.add("[" + dateFormatter.format(date) + "] " + message);
     }
 
@@ -163,10 +162,7 @@ class WatchListFrame implements Runnable {
 
     public void addMatch(HashMap<String, String> match) {
         Date date = new Date();
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
-
-//        matchList.add(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
-        matchData.addElement(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
+        matchData.addElement("[" + dateFormatter.format(date) + "] " + "Seller: " + match.get("Seller") + " - " + match.get("Auction"));
     }
 
     public void notify(String auction) {

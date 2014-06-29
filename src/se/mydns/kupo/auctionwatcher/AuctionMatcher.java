@@ -75,13 +75,16 @@ public class AuctionMatcher {
     public ArrayList checkShopping(ArrayList<HashMap<String,String>> feed) {
         ArrayList<HashMap<String,String>> matches = new ArrayList<>();
 
+        // Loop over all the auctions
         for(HashMap<String,String> auc : feed) {
             for(String p : shoppingList) {
+                // For each auction. check against all the patterns
                 Pattern pattern = Pattern.compile(".*(WTS|Sell).*" + p, Pattern.CASE_INSENSITIVE);
                 String line = auc.get("Auction");
                 if (line != null) {
                     Matcher m = pattern.matcher(line);
                     if (m.find()) {
+                        // we got a hit. check if we already have it.
                         if(!matches.contains(auc))
                             matches.add(auc);
                     }

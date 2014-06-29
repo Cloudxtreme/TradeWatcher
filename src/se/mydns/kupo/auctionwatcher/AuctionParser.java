@@ -30,11 +30,11 @@ public class AuctionParser {
             HashMap<String, String> tempHash = new HashMap<>();
 
             /** Time of auction **/
-            Pattern tp = Pattern.compile("(\\[<b class='aud'>).*?(</b>])");
-            Matcher tm = tp.matcher(item);
-            if(tm.find())
+//            Pattern tp = Pattern.compile("(\\[<b class='aud'>).*?(</b>])");
+//            Matcher tm = tp.matcher(item);
+//            if(tm.find())
 //                temp.add(tm.group(0).replaceAll("\\[<b class='aud'>", "").replaceAll("</b>]", ""));
-                tempHash.put("Time", tm.group(0).replaceAll("\\[<b class='aud'>", "").replaceAll("</b>]", ""));
+//                tempHash.put("Time", tm.group(0).replaceAll("\\[<b class='aud'>", "").replaceAll("</b>]", ""));
 
             /** Seller **/
             Pattern sp = Pattern.compile("(<b class='slr'>).*?(</b>)");
