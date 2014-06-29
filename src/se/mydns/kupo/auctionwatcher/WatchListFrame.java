@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -20,9 +21,12 @@ class WatchListFrame implements Runnable {
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
     private JFrame frame;
     private List statusBar;
-    private List wtsList;
-    private List wtbList;
-    private List matchList;
+    private DefaultListModel<String> wtsData = new DefaultListModel<>();
+    private JList<ArrayList<String>> wtsList;
+    private DefaultListModel<String> wtbData = new DefaultListModel<>();
+    private JList<ArrayList<String>> wtbList;
+    private DefaultListModel<String> matchData = new DefaultListModel<>();
+    private JList<ArrayList<String>> matchList;
     private TrayIcon trayIcon;
 
     public WatchListFrame() {
@@ -90,10 +94,10 @@ class WatchListFrame implements Runnable {
         menu.add(exitMenuItem);
 
         /** Panels for the borderlayout **/
-        Panel bottomPanel = new Panel();
-        Panel leftPanel = new Panel();
+        JPanel bottomPanel = new JPanel();
+        JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(200,350));
-        Panel rightPanel = new Panel();
+        JPanel rightPanel = new JPanel();
 
         frame.add(leftPanel, BorderLayout.WEST);
         frame.add(rightPanel, BorderLayout.CENTER);
@@ -106,9 +110,9 @@ class WatchListFrame implements Runnable {
 
         /** Lists for items and matches **/
         JTabbedPane tabs = new JTabbedPane();
-        wtsList = new List();
-        wtbList = new List();
-        matchList = new List();
+        wtsList = new JList();
+        wtbList = new JList(wtbData);
+        matchList = new JList(matchData);
         rightPanel.add(matchList, BorderLayout.CENTER);
         matchList.setPreferredSize(rightPanel.getPreferredSize());
         tabs.addTab("WTS", wtsList);
@@ -132,25 +136,37 @@ class WatchListFrame implements Runnable {
     }
 
     public void addSellItem(String item) {
-        wtsList.add(item);
+        wtsData.addElement(item);
     }
 
     public void delSellItem(String item) {
-        wtsList.remove(item);
+        for(int i = 0; i < wtsData.size(); i++) {
+            String data = wtsData.getElementAt(i);
+            if (data.equals(item)) {
+                wtsData.removeElement(data);
+            }
+        }
     }
 
     public void delBuyItem(String item) {
-        wtbList.remove(item);
+        for(int i = 0; i < wtbData.size(); i++) {
+            String data = wtbData.getElementAt(i);
+            if (data.equals(item)) {
+                wtbData.removeElement(data);
+            }
+        }
     }
+
     public void addBuyItem(String item) {
-        wtbList.add(item);
+        wtbData.addElement(item);
     }
 
     public void addMatch(HashMap<String, String> match) {
         Date date = new Date();
         SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
 
-        matchList.add(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
+//        matchList.add(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
+        matchData.addElement(match.get("Time") + " - " + match.get("Seller") + " - " + match.get("Auction"));
     }
 
     public void notify(String auction) {
