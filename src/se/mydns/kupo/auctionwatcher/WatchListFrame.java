@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.file.FileSystems;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +13,8 @@ import java.util.Date;
  * GUI for the TradeWatcher
  */
 class WatchListFrame implements Runnable {
-    private final Image trayImage = Toolkit.getDefaultToolkit().getImage(".\\res\\eq.gif");
+    private String slash = FileSystems.getDefault().getSeparator();
+    private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
     private JFrame frame;
     private List statusBar;
     private List itemList;
@@ -60,8 +62,7 @@ class WatchListFrame implements Runnable {
         /** New shiny window **/
         frame = new JFrame("Project 1999 Trade Watcher");
         frame.setPreferredSize(new Dimension(600, 350));
-        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(".\\res\\eq.png"));
-//        frame.setLocationRelativeTo(null);
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage("." + slash + "res" + slash + "eq.png"));
         frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,7 +77,6 @@ class WatchListFrame implements Runnable {
         leftPanel.setPreferredSize(new Dimension(200,350));
         Panel rightPanel = new Panel();
 
-//        frame.remove(layout.getLayoutComponent(BorderLayout.CENTER));
         frame.add(leftPanel, BorderLayout.WEST);
         frame.add(rightPanel, BorderLayout.CENTER);
         frame.add(topPanel, BorderLayout.NORTH);
