@@ -1,6 +1,7 @@
-- Start/Stop looking toggle?
-- Finish GUI
-- Add timestamp to events
-- Possibility to add and remove items on the fly
+- Add "Start/Stop looking" toggle
+- Clickable WTS/WTB tabs
+- "Add/Remove item" popup/button
+- Add timestamps to statusbar
 - Remember old matches and only notify on new
-- notification! With or without sound.
+- Ability to clear old matches. (cleared on age as well?)
+- Add notification sound (toggleable)

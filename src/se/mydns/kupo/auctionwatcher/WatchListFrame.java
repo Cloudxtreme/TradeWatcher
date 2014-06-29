@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * GUI for the TradeWatcher
@@ -109,7 +112,10 @@ class WatchListFrame implements Runnable {
     }
 
     public void addStatus(String message) {
-        statusBar.add(message);
+        Date date = new Date();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
+
+        statusBar.add("[" + dateFormatter.format(date) + "] " + message);
     }
 
     public void addSellItem(String item) {

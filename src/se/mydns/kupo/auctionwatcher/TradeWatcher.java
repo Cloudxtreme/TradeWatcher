@@ -29,7 +29,10 @@ class TradeWatcher {
 
     private void match() {
         matches.clear();
-        while(true) {
+        boolean paus = true;
+        while(!paus) {
+            getAuctionFeed();
+            parse();
             frame.addStatus("Matching patterns.");
             matches = matcher.checkSelling(auctions);
             if(!matches.isEmpty()) {
@@ -45,9 +48,6 @@ class TradeWatcher {
             }
 
             try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
-
-            getAuctionFeed();
-            parse();
         }
 
     }
@@ -67,10 +67,10 @@ class TradeWatcher {
     private void setup() {
         frame = new WatchListFrame();
         populateMatcher();
-        getAuctionFeed();
     }
 
     private void populateMatcher() {
+        frame.addStatus("Populating matcher patterns.");
         String slash = FileSystems.getDefault().getSeparator();
         BufferedReader br;
         try {
