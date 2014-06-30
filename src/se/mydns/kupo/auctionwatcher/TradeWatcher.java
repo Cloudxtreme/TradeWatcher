@@ -18,7 +18,7 @@ class TradeWatcher {
     private final AuctionParser parser = new AuctionParser();
     private ArrayList<HashMap<String, String>> newMatches = new ArrayList<>();
     private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
-    private WatchListFrame frame;
+    private TradeWatcherFrame frame;
 
     private TradeWatcher() {
         setup();
@@ -76,7 +76,7 @@ class TradeWatcher {
     }
 
     private void setup() {
-        frame = new WatchListFrame();
+        frame = new TradeWatcherFrame();
         populateMatcher();
     }
 

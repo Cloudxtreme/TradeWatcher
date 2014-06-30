@@ -10,7 +10,7 @@
 - Fix bug where matches list gets updates every time instead of just with new matches.
 
 DONE:
-- Add timestamps to statusbar
+- Add timestamps to statusbara
 - Add options menu
 - Clickable WTS/WTB tabs
 - Remember old matches and only notify on new

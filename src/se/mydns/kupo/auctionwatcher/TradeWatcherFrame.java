@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * GUI for the TradeWatcher
  */
-class WatchListFrame implements Runnable {
+class TradeWatcherFrame implements Runnable {
     private Logger log = Logger.getLogger(TradeWatcher.class.getName());
     private final String slash = FileSystems.getDefault().getSeparator();
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
@@ -29,7 +29,7 @@ class WatchListFrame implements Runnable {
     private TrayIcon trayIcon;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
 
-    public WatchListFrame() {
+    public TradeWatcherFrame() {
         run();
     }
 
