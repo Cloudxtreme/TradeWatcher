@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by oskurot on 2014-06-23.
@@ -17,6 +18,7 @@ import java.util.HashMap;
 public class TestAuctionMatcher {
     private final ArrayList<String> lines = new ArrayList<>();
     private ArrayList<HashMap<String,String>> auctionFeed = new ArrayList<>();
+    private ArrayList<HashMap<String,String>> previousMatches = new ArrayList<>();
 
     @Before
     public void setUp() {
@@ -39,7 +41,7 @@ public class TestAuctionMatcher {
 
         matcher.addShoppingPattern("Cobalt Breastplate");
 
-        ArrayList<HashMap<String,String>> matches = matcher.checkShopping(auctionFeed);
+        List<HashMap<String,String>> matches = matcher.checkWTB(auctionFeed);
 
         if(matches.size() > 0) {
             for(HashMap<String,String> match : matches) {
@@ -56,7 +58,7 @@ public class TestAuctionMatcher {
 
         matcher.addSellingPattern("Impskin");
 
-        ArrayList<HashMap<String,String>> matches = matcher.checkSelling(auctionFeed);
+        List<HashMap<String,String>> matches = matcher.checkWTS(auctionFeed, previousMatches);
 
         if(matches.size() > 0) {
             for(HashMap<String,String> match : matches) {

@@ -8,6 +8,7 @@
 - Add options window
 - Add overlay option
 - Refactor addMatch to take a hashmap and be called updateMatch
+- Fix bug where lists do not show scrollbar when appropriate.
 
 DONE:
 - Add timestamps to statusbar

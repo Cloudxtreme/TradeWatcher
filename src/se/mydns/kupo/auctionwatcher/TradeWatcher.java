@@ -1,23 +1,24 @@
 package se.mydns.kupo.auctionwatcher;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.FileSystems;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.List;
 
 /**
  * Main class for TradeWatcher
  */
 class TradeWatcher {
-
     private final ArrayList<String> lines = new ArrayList<>();
     private ArrayList<HashMap<String,String>> auctions = new ArrayList<>();
     private final AuctionMatcher matcher = new AuctionMatcher();
     private final AuctionParser parser = new AuctionParser();
+    private ArrayList<HashMap<String, String>> newMatches = new ArrayList<>();
     private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
     private WatchListFrame frame;
 
@@ -28,34 +29,46 @@ class TradeWatcher {
     }
 
     private void match() {
-        matches.clear();
+        newMatches.clear();
         boolean paus = false;
         while(!paus) {
             getAuctionFeed();
             parse();
             frame.addStatus("Matching patterns.");
-            matches = matcher.checkSelling(auctions);
-            if(!matches.isEmpty()) {
-                addMatches();
-                matches.clear();
 
-            }
+//            newMatches = matcher.checkWTS(auctions, matches);
+//            addMatches();
 
-            matches = matcher.checkShopping(auctions);
-            if(!matches.isEmpty()) {
-                addMatches();
-                matches.clear();
-            }
+            newMatches = matcher.checkWTB(auctions);
+            addMatches();
 
             try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
         }
 
     }
 
+
     private void addMatches() {
-        for(HashMap<String, String> match : matches) {
-            frame.addMatch(match);
-            frame.notify(match.get("Auction"));
+        if (!newMatches.isEmpty()) {
+            ArrayList<HashMap<String, String>> temp = (ArrayList<HashMap<String, String>>) matches.clone();
+            for(HashMap<String, String> newMatch : newMatches) {
+                boolean gotPreviousMatch = false;
+                for(HashMap<String, String> oldMatch : temp) {
+                    if(newMatch.get("Seller").equals(oldMatch.get("Seller")) &&
+                            newMatch.get("Match").equals(oldMatch.get("Match"))) {
+                        temp.remove(oldMatch);
+                        temp.add(newMatch);
+                        gotPreviousMatch = true;
+                    }
+                }
+                if(!gotPreviousMatch) {
+                    temp.add(newMatch);
+                    frame.notify(newMatch.get("Auction"));
+                }
+            }
+            newMatches.clear();
+            matches = (ArrayList<HashMap<String, String>>) temp.clone();
+            frame.updateMatches(matches);
         }
     }
 

@@ -2,13 +2,12 @@ package se.mydns.kupo.auctionwatcher;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,6 +131,7 @@ class WatchListFrame implements Runnable {
     public void addStatus(String message) {
         Date date = new Date();
         statusBar.add("[" + dateFormatter.format(date) + "] " + message);
+        statusBar.select(statusBar.getItemCount() -1);
     }
 
     public void addSellItem(String item) {
@@ -160,13 +160,21 @@ class WatchListFrame implements Runnable {
         wtbData.addElement(item);
     }
 
-    public void addMatch(HashMap<String, String> match) {
-        Date date = new Date();
-        matchData.addElement("[" + dateFormatter.format(date) + "] " + "Seller: " + match.get("Seller") + " - " + match.get("Auction"));
-    }
+//    public void addMatch(HashMap<String, String> match) {
+//        Date date = new Date();
+//        matchData.addElement("[" + dateFormatter.format(date) + "] " + "Seller: " + match.get("Seller") + " - " + match.get("Auction"));
+//    }
 
     public void notify(String auction) {
         trayIcon.displayMessage("Match found!", auction, TrayIcon.MessageType.INFO);
+    }
+
+    public void updateMatches(java.util.List<HashMap<String, String>> matches) {
+        Date date = new Date();
+        matchData.clear();
+        for(HashMap<String,String> match : matches) {
+            matchData.addElement("[" + dateFormatter.format(date) + "] " + "Seller: " + match.get("Seller") + " - " + match.get("Auction"));
+        }
     }
 }
 
