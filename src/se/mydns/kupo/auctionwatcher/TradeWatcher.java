@@ -34,8 +34,8 @@ class TradeWatcher {
             parse();
             frame.addStatus("Matching patterns.");
 
-//            newMatches = matcher.checkWTS(auctions, matches);
-//            addMatches();
+            newMatches = matcher.checkWTS(auctions);
+            addMatches();
 
             newMatches = matcher.checkWTB(auctions);
             addMatches();
@@ -88,14 +88,14 @@ class TradeWatcher {
             br = new BufferedReader(new FileReader("." + slash + "res" + slash + "sell.txt"));
             String line;
             while ((line = br.readLine()) != null) {
-                frame.addSellItem(line);
+                frame.addWtsItem(line);
                 matcher.addSellingPattern(line);
             }
             br.close();
 
             br = new BufferedReader(new FileReader("." + slash + "res" + slash + "buy.txt"));
             while ((line = br.readLine()) != null) {
-                frame.addBuyItem(line);
+                frame.addWtbItem(line);
                 matcher.addShoppingPattern(line);
             }
             br.close();

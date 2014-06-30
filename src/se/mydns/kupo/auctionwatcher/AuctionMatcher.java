@@ -64,8 +64,10 @@ public class AuctionMatcher {
         return -1;
     }
 
-    public ArrayList<HashMap<String, String>> checkWTS(ArrayList<HashMap<String, String>> feed, ArrayList<HashMap<String, String>> matches) {
-        ArrayList<HashMap<String, String>> newMatches = (ArrayList<HashMap<String, String>>) matches.clone();
+    public ArrayList<HashMap<String, String>> checkWTS(ArrayList<HashMap<String, String>> feed) {
+        ArrayList<HashMap<String, String>> newMatches = new ArrayList<>();
+
+        // Loop over all the auctions
         for (HashMap<String, String> auc : feed) {
             for (String p : shoppingList) {
                 // For each auction. check against all the patterns
@@ -74,22 +76,8 @@ public class AuctionMatcher {
                 if (line != null) {
                     Matcher m = pattern.matcher(line);
                     if (m.find()) {
-                        // we got a hit. check if we already have it.
-                        boolean matchReplaced = false;
-                        for (HashMap<String, String> match : newMatches) {
-                            if (match.get("Seller").equals(auc.get("Seller"))) {
-                                if (match.get("Match").equals(p)) {
-                                    newMatches.remove(match);
-                                    auc.put("Match", p);
-                                    newMatches.add(auc);
-                                    matchReplaced = true;
-                                }
-                            }
-                        }
-                        if (!matchReplaced) {
-                            auc.put("Match", p);
-                            newMatches.add(auc);
-                        }
+                        auc.put("Match", p);
+                        newMatches.add(auc);
                     }
                 }
             }

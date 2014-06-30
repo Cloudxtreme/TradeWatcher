@@ -33,7 +33,6 @@ class WatchListFrame implements Runnable {
         run();
     }
 
-
     public void run() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -117,7 +116,7 @@ class WatchListFrame implements Runnable {
 
         /** buy/sell tabs and lists **/
         JTabbedPane tabs = new JTabbedPane();
-        wtsList = new JList();
+        wtsList = new JList(wtsData);
         wtbList = new JList(wtbData);
         tabs.addTab("WTS", wtsList);
         tabs.addTab("WTB", wtbList);
@@ -138,11 +137,11 @@ class WatchListFrame implements Runnable {
         statusBar.select(statusBar.getItemCount() -1);
     }
 
-    public void addSellItem(String item) {
+    public void addWtsItem(String item) {
         wtsData.addElement(item);
     }
 
-    public void delSellItem(String item) {
+    public void delWtsItem(String item) {
         for(int i = 0; i < wtsData.size(); i++) {
             String data = wtsData.getElementAt(i);
             if (data.equals(item)) {
@@ -151,7 +150,7 @@ class WatchListFrame implements Runnable {
         }
     }
 
-    public void delBuyItem(String item) {
+    public void delWtbItem(String item) {
         for(int i = 0; i < wtbData.size(); i++) {
             String data = wtbData.getElementAt(i);
             if (data.equals(item)) {
@@ -160,14 +159,9 @@ class WatchListFrame implements Runnable {
         }
     }
 
-    public void addBuyItem(String item) {
+    public void addWtbItem(String item) {
         wtbData.addElement(item);
     }
-
-//    public void addMatch(HashMap<String, String> match) {
-//        Date date = new Date();
-//        matchData.addElement("[" + dateFormatter.format(date) + "] " + "Seller: " + match.get("Seller") + " - " + match.get("Auction"));
-//    }
 
     public void notify(String auction) {
         trayIcon.displayMessage("Match found!", auction, TrayIcon.MessageType.INFO);

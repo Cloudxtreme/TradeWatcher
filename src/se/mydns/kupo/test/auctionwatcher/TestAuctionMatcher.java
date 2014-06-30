@@ -58,7 +58,7 @@ public class TestAuctionMatcher {
 
         matcher.addSellingPattern("Impskin");
 
-        List<HashMap<String,String>> matches = matcher.checkWTS(auctionFeed, previousMatches);
+        List<HashMap<String,String>> matches = matcher.checkWTS(auctionFeed);
 
         if(matches.size() > 0) {
             for(HashMap<String,String> match : matches) {
