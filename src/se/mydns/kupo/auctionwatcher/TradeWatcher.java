@@ -1,6 +1,5 @@
 package se.mydns.kupo.auctionwatcher;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -8,7 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.util.*;
-import java.util.List;
 
 /**
  * Main class for TradeWatcher

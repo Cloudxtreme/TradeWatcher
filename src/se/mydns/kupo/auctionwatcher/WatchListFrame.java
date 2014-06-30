@@ -108,13 +108,17 @@ class WatchListFrame implements Runnable {
         rightPanel.setLayout(new BorderLayout());
         bottomPanel.setLayout(new BorderLayout());
 
-        /** Lists for items and matches **/
+        /** Matches panel **/
+        matchList = new JList(matchData);
+        rightPanel.add(matchList, BorderLayout.CENTER);
+        Label matchLabel = new Label("Matches:");
+        rightPanel.add(matchLabel, BorderLayout.NORTH);
+        matchList.setPreferredSize(rightPanel.getPreferredSize());
+
+        /** buy/sell tabs and lists **/
         JTabbedPane tabs = new JTabbedPane();
         wtsList = new JList();
         wtbList = new JList(wtbData);
-        matchList = new JList(matchData);
-        rightPanel.add(matchList, BorderLayout.CENTER);
-        matchList.setPreferredSize(rightPanel.getPreferredSize());
         tabs.addTab("WTS", wtsList);
         tabs.addTab("WTB", wtbList);
         leftPanel.add(tabs, BorderLayout.CENTER);

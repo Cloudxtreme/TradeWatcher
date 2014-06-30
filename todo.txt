@@ -1,16 +1,17 @@
-- Remember old matches and only notify on new
+- Add "Matches" label to gui
+- "Add/Remove item" popup/button
 - Ability to clear old matches. (cleared on age as well?)
 - Add "Start/Stop looking" toggle
-- Add "Matches" label to gui
 - Add timestamps to matches list entries
-- "Add/Remove item" popup/button
 - Add notification sound option
 - Add options window
 - Add overlay option
-- Refactor addMatch to take a hashmap and be called updateMatch
 - Fix bug where lists do not show scrollbar when appropriate.
+- Fix bug where matches list gets updates every time instead of just with new matches.
 
 DONE:
 - Add timestamps to statusbar
 - Add options menu
 - Clickable WTS/WTB tabs
+- Remember old matches and only notify on new
+- Refactor addMatch to take a hashmap and be called updateMatch
