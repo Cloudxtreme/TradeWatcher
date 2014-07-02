@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -51,6 +53,11 @@ class TradeWatcherFrame implements Runnable {
 
             ActionListener listener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    if(frame.getState() == JFrame.ICONIFIED) {
+                        frame.setState(JFrame.NORMAL);
+                    } else {
+                        frame.setState(JFrame.ICONIFIED);
+                    }
                     frame.setVisible(!frame.isVisible());
                 }
             };
@@ -121,6 +128,13 @@ class TradeWatcherFrame implements Runnable {
         tabs.addTab("WTS", wtsList);
         tabs.addTab("WTB", wtbList);
         leftPanel.add(tabs, BorderLayout.CENTER);
+        JPopupMenu pop = new JPopupMenu();
+        JMenuItem addItem = new JMenuItem("Add");
+        JMenuItem removeItem = new JMenuItem("Remove");
+        pop.add(addItem);
+        pop.add(removeItem);
+        wtsList.setComponentPopupMenu(pop);
+        wtbList.setComponentPopupMenu(pop);
 
         /** Status bar **/
         statusBar = new List();

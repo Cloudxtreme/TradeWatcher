@@ -1,4 +1,3 @@
-- Add "Matches" label to gui
 - "Add/Remove item" popup/button
 - Ability to clear old matches. (cleared on age as well?)
 - Add "Start/Stop looking" toggle
@@ -15,3 +14,4 @@ DONE:
 - Clickable WTS/WTB tabs
 - Remember old matches and only notify on new
 - Refactor addMatch to take a hashmap and be called updateMatch
+- Add "Matches" label to gui
