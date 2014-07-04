@@ -45,7 +45,6 @@ class TradeWatcher {
 
     }
 
-
     private void addMatches() {
         if (!newMatches.isEmpty()) {
             ArrayList<HashMap<String, String>> temp = (ArrayList<HashMap<String, String>>) matches.clone();
@@ -76,7 +75,7 @@ class TradeWatcher {
     }
 
     private void setup() {
-        frame = new TradeWatcherFrame();
+        frame = new TradeWatcherFrame(matcher);
         populateMatcher();
     }
 

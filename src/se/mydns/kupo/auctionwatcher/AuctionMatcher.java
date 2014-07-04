@@ -16,8 +16,11 @@ public class AuctionMatcher {
      * Checks for duplicates and adds if none are found *
      */
     public void addSellingPattern(String pattern) {
-        if (hasValue(sellingList, pattern) == -1)
+        if (hasValue(sellingList, pattern) == -1) {
             sellingList.add(pattern);
+//            System.out.println("[Matcher] Adding selling pattern " + pattern);
+        }
+
     }
 
     /**
@@ -27,6 +30,7 @@ public class AuctionMatcher {
         int index = hasValue(sellingList, pattern);
         if (index != -1) {
             sellingList.remove(index);
+//            System.out.println("[Matcher] Removing selling pattern " + pattern);
             return true;
         }
         return false;
@@ -38,6 +42,7 @@ public class AuctionMatcher {
     public void addShoppingPattern(String pattern) {
         if (hasValue(shoppingList, pattern) == -1)
             shoppingList.add(pattern);
+//            System.out.println("[Matcher] Adding shopping pattern " + pattern);
     }
 
     /**
@@ -47,6 +52,7 @@ public class AuctionMatcher {
         int index = hasValue(shoppingList, pattern);
         if (index != -1) {
             shoppingList.remove(index);
+//            System.out.println("[Matcher] Removing shopping pattern " + pattern);
             return true;
         }
         return false;

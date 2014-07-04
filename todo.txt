@@ -7,9 +7,10 @@
 - Add overlay option
 - Fix bug where lists do not show scrollbar when appropriate.
 - Fix bug where matches list gets updates every time instead of just with new matches.
+- Add custom regex tab
 
 DONE:
-- Add timestamps to statusbara
+- Add timestamps to statusbar
 - Add options menu
 - Clickable WTS/WTB tabs
 - Remember old matches and only notify on new

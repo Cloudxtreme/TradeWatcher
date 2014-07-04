@@ -1,12 +1,12 @@
 package se.mydns.kupo.auctionwatcher;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * GUI for the TradeWatcher
  */
-class TradeWatcherFrame implements Runnable {
+class TradeWatcherFrame implements Runnable, ActionListener {
     private Logger log = Logger.getLogger(TradeWatcher.class.getName());
     private final String slash = FileSystems.getDefault().getSeparator();
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
@@ -30,8 +30,12 @@ class TradeWatcherFrame implements Runnable {
     private JList<ArrayList<String>> matchList;
     private TrayIcon trayIcon;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
+    private MediaPlayer mediaPlayer;
+    private JTabbedPane tabs;
+    private AuctionMatcher matcher;
 
-    public TradeWatcherFrame() {
+    public TradeWatcherFrame(AuctionMatcher matcher) {
+        this.matcher = matcher;
         run();
     }
 
@@ -75,6 +79,7 @@ class TradeWatcherFrame implements Runnable {
 
         } else {
             JOptionPane.showMessageDialog(frame, "Could not get system tray. Popup notification will be unavailable.", "System Tray Not Found", JOptionPane.WARNING_MESSAGE);
+
         }
     }
 
@@ -85,6 +90,11 @@ class TradeWatcherFrame implements Runnable {
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage("." + slash + "res" + slash + "eq.png"));
         frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        /** Notification Audio **/
+//        String soundFile = "" + slash + "res" + slash + "notify.mp3";
+//        Media notification = new Media(soundFile);
+//        mediaPlayer = new MediaPlayer(notification);
 
         /** Layout **/
         BorderLayout layout = new BorderLayout(5,5);
@@ -122,19 +132,28 @@ class TradeWatcherFrame implements Runnable {
         matchList.setPreferredSize(rightPanel.getPreferredSize());
 
         /** buy/sell tabs and lists **/
-        JTabbedPane tabs = new JTabbedPane();
+        tabs = new JTabbedPane();
         wtsList = new JList(wtsData);
+        wtsList.setName("WTS");
+        wtsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         wtbList = new JList(wtbData);
+        wtbList.setName("WTB");
+        wtbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabs.addTab("WTS", wtsList);
         tabs.addTab("WTB", wtbList);
-        leftPanel.add(tabs, BorderLayout.CENTER);
+
+
         JPopupMenu pop = new JPopupMenu();
         JMenuItem addItem = new JMenuItem("Add");
         JMenuItem removeItem = new JMenuItem("Remove");
+        addItem.addActionListener(this);
+        removeItem.addActionListener(this);
         pop.add(addItem);
         pop.add(removeItem);
         wtsList.setComponentPopupMenu(pop);
         wtbList.setComponentPopupMenu(pop);
+
+        leftPanel.add(tabs, BorderLayout.CENTER);
 
         /** Status bar **/
         statusBar = new List();
@@ -185,7 +204,50 @@ class TradeWatcherFrame implements Runnable {
         Date date = new Date();
         matchData.clear();
         for(HashMap<String,String> match : matches) {
-            matchData.addElement("[" + dateFormatter.format(date) + "] " + "Seller: " + match.get("Seller") + " - " + match.get("Auction"));
+            matchData.addElement("[" + dateFormatter.format(date) + "] " + "Auctioneer: " + match.get("Seller") + " - " + match.get("Auction"));
+        }
+        for(Component comp : tabs.getComponents()) {
+            comp.update(frame.getGraphics());
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        Component tab = tabs.getSelectedComponent();
+
+        if(command.equals("Add")) {
+            String item = JOptionPane.showInputDialog(frame, "Enter item name", "New item", JOptionPane.QUESTION_MESSAGE);
+
+
+            if(tab.getName().equals("WTS")) {
+                if(!item.isEmpty()) {
+                    matcher.addSellingPattern(item);
+                    addWtsItem(item);
+                }
+            } else {
+                if(!item.isEmpty()) {
+                    matcher.addShoppingPattern(item);
+                    addWtbItem(item);
+                }
+            }
+        } else {
+
+            if(tab.getName().equals("WTS")) {
+                Object selected = wtsList.getSelectedValue();
+
+                if(selected != null) {
+                    matcher.delSellingPattern((String) selected);
+                    delWtsItem((String) selected);
+                }
+            } else {
+                Object selected = wtbList.getSelectedValue();
+
+                if(selected != null) {
+                    matcher.delShoppingPattern((String) selected);
+                    delWtbItem((String) selected);
+                }
+            }
         }
     }
 }
