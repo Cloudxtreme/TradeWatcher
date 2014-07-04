@@ -7,7 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.List;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -89,10 +96,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        /** Notification Audio **/
-//        String soundFile = "" + slash + "res" + slash + "notify.mp3";
-//        Media notification = new Media(soundFile);
-//        mediaPlayer = new MediaPlayer(notification);
+//        /** Notification Audio **/
+//        Media media = new Media("file:///c|\\Users\\oskurot\\IdeaProjects\\P99AuctionWatchList\\res\\notify.mp3");
+//        mediaPlayer = new MediaPlayer(media);
 
         /** Layout **/
         BorderLayout layout = new BorderLayout(5,5);
@@ -136,8 +142,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         /** buy/sell tabs and lists **/
         tabs = new JTabbedPane();
-        JScrollPane wtsPane = new JScrollPane();
+
         wtsList = new JList(wtsData);
+        JScrollPane wtsPane = new JScrollPane(wtsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         wtsPane.setViewportView(wtsList);
         wtsList.setName("WTS");
         wtsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -145,8 +152,8 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         tabs.addTab("WTS", wtsList);
 
         wtbList = new JList(wtbData);
-        JScrollPane wtbPane = new JScrollPane();
         wtbList.setName("WTB");
+        JScrollPane wtbPane = new JScrollPane(wtbList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         wtbPane.setViewportView(wtbList);
         wtbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         wtsList.setSelectedIndex(0);
