@@ -1,12 +1,9 @@
-- "Add/Remove item" popup/button
 - Ability to clear old matches. (cleared on age as well?)
 - Add "Start/Stop looking" toggle
-- Add timestamps to matches list entries
 - Add notification sound option
 - Add options window
 - Add overlay option
 - Fix bug where lists do not show scrollbar when appropriate.
-- Fix bug where matches list gets updates every time instead of just with new matches.
 - Add custom regex tab
 
 DONE:
@@ -16,3 +13,6 @@ DONE:
 - Remember old matches and only notify on new
 - Refactor addMatch to take a hashmap and be called updateMatch
 - Add "Matches" label to gui
+- "Add/Remove item" popup/button
+- Add timestamps to matches list entries
+- Fix bug where matches list gets updates every time instead of just with new matches.

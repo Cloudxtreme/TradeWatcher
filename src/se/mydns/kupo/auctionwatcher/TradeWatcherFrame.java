@@ -70,7 +70,6 @@ class TradeWatcherFrame implements Runnable, ActionListener {
             trayIcon.setImageAutoSize(true);
             trayIcon.addActionListener(listener);
 
-
             try {
                 tray.add(trayIcon);
             } catch (AWTException e) {
@@ -79,7 +78,6 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         } else {
             JOptionPane.showMessageDialog(frame, "Could not get system tray. Popup notification will be unavailable.", "System Tray Not Found", JOptionPane.WARNING_MESSAGE);
-
         }
     }
 
@@ -103,9 +101,14 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         /** Menubar **/
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
+        menu.setMnemonic('f');
         menuBar.add(menu);
         JMenuItem optionsMenuItem = new JMenuItem("Options");
+        optionsMenuItem.setMnemonic('o');
+        optionsMenuItem.addActionListener(this);
         JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.setMnemonic('x');
+        exitMenuItem.addActionListener(this);
         menu.add(optionsMenuItem);
         menu.add(exitMenuItem);
 
@@ -133,13 +136,20 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         /** buy/sell tabs and lists **/
         tabs = new JTabbedPane();
+        JScrollPane wtsPane = new JScrollPane();
         wtsList = new JList(wtsData);
+        wtsPane.setViewportView(wtsList);
         wtsList.setName("WTS");
         wtsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        wtbList = new JList(wtbData);
-        wtbList.setName("WTB");
-        wtbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        wtsList.setSelectedIndex(0);
         tabs.addTab("WTS", wtsList);
+
+        wtbList = new JList(wtbData);
+        JScrollPane wtbPane = new JScrollPane();
+        wtbList.setName("WTB");
+        wtbPane.setViewportView(wtbList);
+        wtbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        wtsList.setSelectedIndex(0);
         tabs.addTab("WTB", wtbList);
 
 
@@ -231,7 +241,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
                     addWtbItem(item);
                 }
             }
-        } else {
+        } else if (command.equals("Remove")){
 
             if(tab.getName().equals("WTS")) {
                 Object selected = wtsList.getSelectedValue();
@@ -248,6 +258,8 @@ class TradeWatcherFrame implements Runnable, ActionListener {
                     delWtbItem((String) selected);
                 }
             }
+        } else if (command.equals("Exit")) {
+            System.exit(0);
         }
     }
 }

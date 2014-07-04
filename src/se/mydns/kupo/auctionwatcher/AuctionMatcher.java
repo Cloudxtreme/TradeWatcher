@@ -1,7 +1,9 @@
 package se.mydns.kupo.auctionwatcher;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,8 +11,14 @@ import java.util.regex.Pattern;
  * Keeps track of what should be looked for and does the actual matching.
  */
 public class AuctionMatcher {
-    private final ArrayList<String> shoppingList = new ArrayList<>();
-    private final ArrayList<String> sellingList = new ArrayList<>();
+
+    private List<String> shoppingList = new ArrayList<>();
+    private List<String> sellingList = new ArrayList<>();
+
+    public AuctionMatcher() {
+        shoppingList = Collections.synchronizedList(shoppingList);
+        sellingList = Collections.synchronizedList(sellingList);
+    }
 
     /**
      * Checks for duplicates and adds if none are found *
@@ -61,7 +69,7 @@ public class AuctionMatcher {
     /**
      * Checks for pattern and returns index if found. returns -1 if not found. *
      */
-    private int hasValue(ArrayList<String> list, String pattern) {
+    private int hasValue(List<String> list, String pattern) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).matches(pattern)) {
                 return i;
