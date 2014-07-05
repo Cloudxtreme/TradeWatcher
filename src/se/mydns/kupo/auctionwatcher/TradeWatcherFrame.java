@@ -4,19 +4,13 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import javax.swing.*;
+
 import java.awt.*;
-import java.awt.List;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +22,8 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private final String slash = FileSystems.getDefault().getSeparator();
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
     private JFrame frame;
-    private List statusBar;
+    private DefaultListModel<String> statusData = new DefaultListModel<>();
+    private JList<ArrayList<String>> statusBar;
     private DefaultListModel<String> wtsData = new DefaultListModel<>();
     private JList<ArrayList<String>> wtsList;
     private DefaultListModel<String> wtbData = new DefaultListModel<>();
@@ -42,6 +37,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private AuctionMatcher matcher;
 
     public TradeWatcherFrame(AuctionMatcher matcher) {
+
         this.matcher = matcher;
         run();
     }
@@ -120,6 +116,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         /** Panels for the borderlayout **/
         JPanel bottomPanel = new JPanel();
+        bottomPanel.setPreferredSize(new Dimension(200,50));
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(200,350));
         JPanel rightPanel = new JPanel();
@@ -136,7 +133,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         /** Matches panel **/
         matchList = new JList(matchData);
         rightPanel.add(matchList, BorderLayout.CENTER);
-        Label matchLabel = new Label("Matches:");
+        JLabel matchLabel = new JLabel("Matches:");
         rightPanel.add(matchLabel, BorderLayout.NORTH);
         matchList.setPreferredSize(rightPanel.getPreferredSize());
 
@@ -145,20 +142,16 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         wtsList = new JList(wtsData);
         JScrollPane wtsPane = new JScrollPane(wtsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        wtsPane.setViewportView(wtsList);
         wtsList.setName("WTS");
         wtsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        wtsList.setSelectedIndex(0);
         tabs.addTab("WTS", wtsList);
 
         wtbList = new JList(wtbData);
-        wtbList.setName("WTB");
         JScrollPane wtbPane = new JScrollPane(wtbList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        wtbPane.setViewportView(wtbList);
+        wtbPane.setPreferredSize(rightPanel.getPreferredSize());
+        wtbList.setName("WTB");
         wtbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        wtsList.setSelectedIndex(0);
         tabs.addTab("WTB", wtbList);
-
 
         JPopupMenu pop = new JPopupMenu();
         JMenuItem addItem = new JMenuItem("Add");
@@ -173,9 +166,10 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         leftPanel.add(tabs, BorderLayout.CENTER);
 
         /** Status bar **/
-        statusBar = new List();
-        statusBar.setPreferredSize(bottomPanel.getPreferredSize());
-        bottomPanel.add(statusBar, BorderLayout.CENTER);
+        statusBar = new JList(statusData);
+        JScrollPane statusScrollPane = new JScrollPane(statusBar, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        statusScrollPane.setPreferredSize(bottomPanel.getPreferredSize());
+        bottomPanel.add(statusScrollPane, BorderLayout.CENTER);
 
         frame.pack();
         frame.setVisible(true);
@@ -183,8 +177,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
     public void addStatus(String message) {
         Date date = new Date();
-        statusBar.add("[" + dateFormatter.format(date) + "] " + message);
-        statusBar.select(statusBar.getItemCount() -1);
+        statusData.addElement("[" + dateFormatter.format(date) + "] " + message);
+        statusBar.setSelectedIndex(statusData.size());
+        statusBar.ensureIndexIsVisible(statusData.size());
     }
 
     public void addWtsItem(String item) {
@@ -243,7 +238,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
                     addWtsItem(item);
                 }
             } else {
-                if(!item.isEmpty()) {
+                if(item != null) {
                     matcher.addShoppingPattern(item);
                     addWtbItem(item);
                 }
