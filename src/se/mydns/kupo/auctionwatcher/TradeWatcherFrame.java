@@ -133,17 +133,17 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         tabs = new JTabbedPane();
 
         wtsList = new JList(wtsData);
-        JScrollPane wtsPane = new JScrollPane(wtsList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        JScrollPane wtsPane = new JScrollPane(wtsList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         wtsList.setName("WTS");
         wtsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabs.addTab("WTS", wtsList);
+        tabs.addTab("WTS", wtsPane);
 
         wtbList = new JList(wtbData);
         JScrollPane wtbPane = new JScrollPane(wtbList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         wtbPane.setPreferredSize(rightPanel.getPreferredSize());
         wtbList.setName("WTB");
         wtbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabs.addTab("WTB", wtbList);
+        tabs.addTab("WTB", wtbPane);
 
         JPopupMenu pop = new JPopupMenu();
         JMenuItem addItem = new JMenuItem("Add");
@@ -169,11 +169,11 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
     public void addStatus(String message) {
         Date date = new Date();
-        int newIndex = statusData.size()-1;
+        int newIndex = statusData.size();
         statusData.addElement("[" + dateFormatter.format(date) + "] " + message);
-        statusBar.setSelectedIndex(newIndex);
-        statusBar.ensureIndexIsVisible(newIndex);
-        statusScrollPane.revalidate();
+//        statusBar.setSelectedIndex(newIndex);
+//        statusBar.ensureIndexIsVisible(newIndex);
+//        statusScrollPane.revalidate();
     }
 
     public void addWtsItem(String item) {
