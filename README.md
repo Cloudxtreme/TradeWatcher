@@ -12,3 +12,5 @@ At the moment you will need to manually edit the textfiles sell.txt and buy.txt 
 See todo.txt for coming functionality.
 
 You can download the latest jar at http://goo.gl/lyBs9p
+
+If you have java installed it should be the simple matter of just double click on the .jar file and the application should start. If it doesn't i can be started with "java -jar TradeWatcher.jar" from a terminal.

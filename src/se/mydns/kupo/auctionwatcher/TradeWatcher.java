@@ -22,7 +22,6 @@ class TradeWatcher {
     private ArrayList<HashMap<String, String>> newMatches = new ArrayList<>();
     private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
     private TradeWatcherFrame frame;
-    private final String APP_NAME = "Trade Watcher";
     private Logger log = Logger.getLogger(TradeWatcher.class.getName());
 
     private TradeWatcher() {
@@ -80,9 +79,11 @@ class TradeWatcher {
     }
 
     private void setup() {
-        if(System.getProperty("os.name").contains("OS X")) {
-            System.out.println("osx");
-            configureForMac();
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+        } catch (Exception e) {
+            log.log(Level.INFO, "Couldn't set system look and feel.");
         }
         frame = new TradeWatcherFrame(matcher);
         populateMatcher();
@@ -137,18 +138,6 @@ class TradeWatcher {
             }
         }
         catch (Exception e) { e.printStackTrace(); }
-    }
-
-    private void configureForMac() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-        } catch (Exception e) {
-            log.log(Level.INFO, "Couldn't set system look and feel.");
-        }
-        System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
-        System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", APP_NAME);
     }
 
     public static void main(String args[]) {

@@ -10,15 +10,12 @@ import java.awt.event.*;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * GUI for the TradeWatcher
  */
 class TradeWatcherFrame implements Runnable, ActionListener {
-    private Logger log = Logger.getLogger(TradeWatcherFrame.class.getName());
     private final String slash = FileSystems.getDefault().getSeparator();
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
     private JFrame frame;
@@ -29,12 +26,12 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private DefaultListModel<String> wtbData = new DefaultListModel<>();
     private JList<ArrayList<String>> wtbList;
     private DefaultListModel<String> matchData = new DefaultListModel<>();
-    private JList<ArrayList<String>> matchList;
     private TrayIcon trayIcon;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
     private MediaPlayer mediaPlayer;
     private JTabbedPane tabs;
     private AuctionMatcher matcher;
+    private JScrollPane statusScrollPane;
 
     public TradeWatcherFrame(AuctionMatcher matcher) {
 
@@ -125,11 +122,12 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         bottomPanel.setLayout(new BorderLayout());
 
         /** Matches panel **/
-        matchList = new JList(matchData);
-        rightPanel.add(matchList, BorderLayout.CENTER);
+        JList<ArrayList<String>> matchList = new JList(matchData);
+        JScrollPane matchPane = new JScrollPane(matchList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        rightPanel.add(matchPane, BorderLayout.CENTER);
         JLabel matchLabel = new JLabel("Matches:");
         rightPanel.add(matchLabel, BorderLayout.NORTH);
-        matchList.setPreferredSize(rightPanel.getPreferredSize());
+        matchPane.setPreferredSize(rightPanel.getPreferredSize());
 
         /** buy/sell tabs and lists **/
         tabs = new JTabbedPane();
@@ -161,7 +159,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         /** Status bar **/
         statusBar = new JList(statusData);
-        JScrollPane statusScrollPane = new JScrollPane(statusBar, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        statusScrollPane = new JScrollPane(statusBar, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         statusScrollPane.setPreferredSize(bottomPanel.getPreferredSize());
         bottomPanel.add(statusScrollPane, BorderLayout.CENTER);
 
@@ -171,16 +169,18 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
     public void addStatus(String message) {
         Date date = new Date();
+        int newIndex = statusData.size()-1;
         statusData.addElement("[" + dateFormatter.format(date) + "] " + message);
-        statusBar.setSelectedIndex(statusData.size());
-        statusBar.ensureIndexIsVisible(statusData.size());
+        statusBar.setSelectedIndex(newIndex);
+        statusBar.ensureIndexIsVisible(newIndex);
+        statusScrollPane.revalidate();
     }
 
     public void addWtsItem(String item) {
         wtsData.addElement(item);
     }
 
-    public void delWtsItem(String item) {
+    void delWtsItem(String item) {
         for(int i = 0; i < wtsData.size(); i++) {
             String data = wtsData.getElementAt(i);
             if (data.equals(item)) {
@@ -189,7 +189,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         }
     }
 
-    public void delWtbItem(String item) {
+    void delWtbItem(String item) {
         for(int i = 0; i < wtbData.size(); i++) {
             String data = wtbData.getElementAt(i);
             if (data.equals(item)) {
@@ -222,40 +222,43 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         String command = e.getActionCommand();
         Component tab = tabs.getSelectedComponent();
 
-        if(command.equals("Add")) {
-            String item = JOptionPane.showInputDialog(frame, "Enter item name", "New item", JOptionPane.QUESTION_MESSAGE);
+        switch (command) {
+            case "Add":
+                String item = JOptionPane.showInputDialog(frame, "Enter item name", "New item", JOptionPane.QUESTION_MESSAGE);
 
 
-            if(tab.getName().equals("WTS")) {
-                if(!item.isEmpty()) {
-                    matcher.addSellingPattern(item);
-                    addWtsItem(item);
+                if (tab.getName().equals("WTS")) {
+                    if (!item.isEmpty()) {
+                        matcher.addSellingPattern(item);
+                        addWtsItem(item);
+                    }
+                } else {
+                    if (item != null) {
+                        matcher.addShoppingPattern(item);
+                        addWtbItem(item);
+                    }
                 }
-            } else {
-                if(item != null) {
-                    matcher.addShoppingPattern(item);
-                    addWtbItem(item);
-                }
-            }
-        } else if (command.equals("Remove")){
+                break;
+            case "Remove":
 
-            if(tab.getName().equals("WTS")) {
-                Object selected = wtsList.getSelectedValue();
+                if (tab.getName().equals("WTS")) {
+                    Object selected = wtsList.getSelectedValue();
 
-                if(selected != null) {
-                    matcher.delSellingPattern((String) selected);
-                    delWtsItem((String) selected);
-                }
-            } else {
-                Object selected = wtbList.getSelectedValue();
+                    if (selected != null) {
+                        matcher.delSellingPattern((String) selected);
+                        delWtsItem((String) selected);
+                    }
+                } else {
+                    Object selected = wtbList.getSelectedValue();
 
-                if(selected != null) {
-                    matcher.delShoppingPattern((String) selected);
-                    delWtbItem((String) selected);
+                    if (selected != null) {
+                        matcher.delShoppingPattern((String) selected);
+                        delWtbItem((String) selected);
+                    }
                 }
-            }
-        } else if (command.equals("Exit")) {
-            System.exit(0);
+                break;
+            case "Exit":
+                System.exit(0);
         }
     }
 }
