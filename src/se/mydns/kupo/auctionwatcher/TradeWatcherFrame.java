@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * GUI for the TradeWatcher
  */
 class TradeWatcherFrame implements Runnable, ActionListener {
-    private Logger log = Logger.getLogger(TradeWatcher.class.getName());
+    private Logger log = Logger.getLogger(TradeWatcherFrame.class.getName());
     private final String slash = FileSystems.getDefault().getSeparator();
     private final Image trayImage = Toolkit.getDefaultToolkit().getImage("." + slash +"res" + slash + "eq.gif");
     private JFrame frame;
@@ -47,12 +47,6 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     }
 
     public void run() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-        } catch (Exception e) {
-            log.log(Level.INFO, "Couldn't set system look and feel.");
-        }
         setupWindow();
         setupSystemTray();
     }
