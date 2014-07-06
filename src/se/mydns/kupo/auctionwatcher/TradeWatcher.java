@@ -38,13 +38,14 @@ class TradeWatcher {
             parse();
             frame.addStatus("Matching patterns.");
 
-            newMatches = matcher.checkWTS(auctions);
+            newMatches = matcher.checkAuctions(auctions);
+            // Ugly hack to avoid concurrency exceptions. fix properly later!
+            try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
             addMatches();
 
-            newMatches = matcher.checkWTB(auctions);
-            addMatches();
-
+            // Sleep until next check
             try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
+
         }
 
     }

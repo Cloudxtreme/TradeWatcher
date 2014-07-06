@@ -78,42 +78,34 @@ public class AuctionMatcher {
         return -1;
     }
 
-    public ArrayList<HashMap<String, String>> checkWTS(ArrayList<HashMap<String, String>> feed) {
+    public ArrayList<HashMap<String, String>> checkAuctions(ArrayList<HashMap<String, String>> auctions) {
         ArrayList<HashMap<String, String>> newMatches = new ArrayList<>();
 
         // Loop over all the auctions
-        for (HashMap<String, String> auc : feed) {
-            for (String p : sellingList) {
+        for (HashMap<String, String> auc : auctions) {
+            String line = auc.get("Auction");
+            for (String p : shoppingList) {
                 // For each auction. check against all the patterns
-                Pattern pattern = Pattern.compile(".*(WTB|Buy).*" + p + ".*", Pattern.CASE_INSENSITIVE);
-                String line = auc.get("Auction");
+                Pattern pattern = Pattern.compile(".*(WTS|Sell).*" + p + ".*", Pattern.CASE_INSENSITIVE);
+
                 if (line != null) {
                     Matcher m = pattern.matcher(line);
                     if (m.find()) {
-                        auc.put("Match", p);
                         HashMap<String,String> match = (HashMap<String, String>) auc.clone();
+                        match.put("Match", p);
                         newMatches.add(match);
                     }
                 }
             }
-        }
-        return newMatches;
-    }
 
-    public ArrayList<HashMap<String, String>> checkWTB(ArrayList<HashMap<String, String>> feed) {
-        ArrayList<HashMap<String, String>> newMatches = new ArrayList<>();
-
-        // Loop over all the auctions
-        for (HashMap<String, String> auc : feed) {
-            for (String p : shoppingList) {
+            for (String p : sellingList) {
                 // For each auction. check against all the patterns
-                Pattern pattern = Pattern.compile(".*(WTS|Sell).*" + p + ".*", Pattern.CASE_INSENSITIVE);
-                String line = auc.get("Auction");
+                Pattern pattern = Pattern.compile(".*(WTB|Buy).*" + p + ".*", Pattern.CASE_INSENSITIVE);
                 if (line != null) {
                     Matcher m = pattern.matcher(line);
                     if (m.find()) {
-                        auc.put("Match", p);
                         HashMap<String,String> match = (HashMap<String, String>) auc.clone();
+                        match.put("Match", p);
                         newMatches.add(match);
                     }
                 }

@@ -36,29 +36,13 @@ public class TestAuctionMatcher {
     }
 
     @Test
-    public void testWTSMatcher() {
+    public void testMatcher() {
         AuctionMatcher matcher = new AuctionMatcher();
 
         matcher.addShoppingPattern("Cobalt Breastplate");
-
-        List<HashMap<String,String>> matches = matcher.checkWTB(auctionFeed);
-
-        if(matches.size() > 0) {
-            for(HashMap<String,String> match : matches) {
-                System.out.println(match.get("Auction"));
-            }
-        } else {
-            Assert.fail();
-        }
-    }
-
-    @Test
-    public void testWTBMatcher() {
-        AuctionMatcher matcher = new AuctionMatcher();
-
         matcher.addSellingPattern("Impskin");
 
-        List<HashMap<String,String>> matches = matcher.checkWTS(auctionFeed);
+        List<HashMap<String,String>> matches = matcher.checkAuctions(auctionFeed);
 
         if(matches.size() > 0) {
             for(HashMap<String,String> match : matches) {
