@@ -109,6 +109,8 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         menu.setMnemonic('f');
         menuBar.add(menu);
         JMenuItem optionsMenuItem = new JMenuItem("Options");
+        JCheckBoxMenuItem options = new JCheckBoxMenuItem("Audio notification");
+
         optionsMenuItem.setMnemonic('o');
         optionsMenuItem.addActionListener(this);
         JMenuItem exitMenuItem = new JMenuItem("Exit");
@@ -116,6 +118,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         exitMenuItem.addActionListener(this);
         menu.add(optionsMenuItem);
         menu.add(exitMenuItem);
+        menu.add(options);
 
         /** Panels for the borderlayout **/
         JPanel bottomPanel = new JPanel();
@@ -226,9 +229,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         for(HashMap<String,String> match : matches) {
             matchData.addElement("[" + dateFormatter.format(date) + "] " + "Auctioneer: " + match.get("Seller") + " - " + match.get("Auction"));
         }
-        for(Component comp : tabs.getComponents()) {
-            comp.update(frame.getGraphics());
-        }
+//        for(Component comp : tabs.getComponents()) {
+//            comp.update(frame.getGraphics());
+//        }
     }
 
     @Override

@@ -83,7 +83,7 @@ public class AuctionMatcher {
 
         // Loop over all the auctions
         for (HashMap<String, String> auc : feed) {
-            for (String p : shoppingList) {
+            for (String p : sellingList) {
                 // For each auction. check against all the patterns
                 Pattern pattern = Pattern.compile(".*(WTB|Buy).*" + p + ".*", Pattern.CASE_INSENSITIVE);
                 String line = auc.get("Auction");
@@ -91,7 +91,8 @@ public class AuctionMatcher {
                     Matcher m = pattern.matcher(line);
                     if (m.find()) {
                         auc.put("Match", p);
-                        newMatches.add(auc);
+                        HashMap<String,String> match = (HashMap<String, String>) auc.clone();
+                        newMatches.add(match);
                     }
                 }
             }
@@ -112,7 +113,8 @@ public class AuctionMatcher {
                     Matcher m = pattern.matcher(line);
                     if (m.find()) {
                         auc.put("Match", p);
-                        newMatches.add(auc);
+                        HashMap<String,String> match = (HashMap<String, String>) auc.clone();
+                        newMatches.add(match);
                     }
                 }
             }
