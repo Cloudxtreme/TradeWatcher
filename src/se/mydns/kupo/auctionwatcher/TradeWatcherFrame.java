@@ -2,11 +2,16 @@ package se.mydns.kupo.auctionwatcher;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,6 +37,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private JTabbedPane tabs;
     private AuctionMatcher matcher;
     private JScrollPane statusScrollPane;
+    private AudioStream as;
 
     public TradeWatcherFrame(AuctionMatcher matcher) {
 
@@ -85,6 +91,12 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
 //        /** Notification Audio **/
 //        Media media = new Media("file:///c|\\Users\\oskurot\\IdeaProjects\\P99AuctionWatchList\\res\\notify.mp3");
+        try {
+
+            String notificationFile = "." + slash + "res" + slash + "notify.wav";
+            InputStream is = new FileInputStream(notificationFile);
+            as = new AudioStream(is);
+        } catch (Exception e) { System.out.println("Could not load notification audio."); e.printStackTrace(); }
 //        mediaPlayer = new MediaPlayer(media);
 
         /** Layout **/
@@ -111,6 +123,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(200,350));
         JPanel rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(400,350));
 
         frame.add(leftPanel, BorderLayout.WEST);
         frame.add(rightPanel, BorderLayout.CENTER);
@@ -134,14 +147,14 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         wtsList = new JList(wtsData);
         JScrollPane wtsPane = new JScrollPane(wtsList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        wtsList.setName("WTS");
+        wtsPane.setName("WTS");
         wtsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabs.addTab("WTS", wtsPane);
 
         wtbList = new JList(wtbData);
         JScrollPane wtbPane = new JScrollPane(wtbList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         wtbPane.setPreferredSize(rightPanel.getPreferredSize());
-        wtbList.setName("WTB");
+        wtbPane.setName("WTB");
         wtbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tabs.addTab("WTB", wtbPane);
 
@@ -204,6 +217,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
     public void notify(String auction) {
         trayIcon.displayMessage("Match found!", auction, TrayIcon.MessageType.INFO);
+        AudioPlayer.player.start(as);
     }
 
     public void updateMatches(java.util.List<HashMap<String, String>> matches) {
