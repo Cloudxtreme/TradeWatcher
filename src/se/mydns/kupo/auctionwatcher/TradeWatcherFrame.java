@@ -218,8 +218,8 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         wtbData.addElement(item);
     }
 
-    public void notify(String auction) {
-        trayIcon.displayMessage("Match found!", auction, TrayIcon.MessageType.INFO);
+    public void notify(HashMap<String, String> match) {
+        trayIcon.displayMessage("Match found!", "Auctioneer: " + match.get("Seller") + " - Match: " + match.get("Match"), TrayIcon.MessageType.INFO);
         AudioPlayer.player.start(as);
     }
 
@@ -227,7 +227,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         Date date = new Date();
         matchData.clear();
         for(HashMap<String,String> match : matches) {
-            matchData.addElement("[" + dateFormatter.format(date) + "] " + "Auctioneer: " + match.get("Seller") + " - " + match.get("Auction"));
+            matchData.addElement("[" + dateFormatter.format(date) + "] " + "Auctioneer: " + match.get("Seller") +
+                                                                                    " - " + match.get("Match") +
+                                                                                    " - " + match.get("Auction"));
         }
 //        for(Component comp : tabs.getComponents()) {
 //            comp.update(frame.getGraphics());

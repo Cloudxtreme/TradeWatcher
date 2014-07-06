@@ -65,7 +65,7 @@ class TradeWatcher {
                 }
                 if(!gotPreviousMatch) {
                     temp.add(newMatch);
-                    frame.notify(newMatch.get("Auction"));
+                    frame.notify(newMatch);
                 }
             }
             newMatches.clear();
