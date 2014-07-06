@@ -225,15 +225,15 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
     public void updateMatches(java.util.List<HashMap<String, String>> matches) {
         Date date = new Date();
+        String dateString = "[" + dateFormatter.format(date) + "] ";
         matchData.clear();
         for(HashMap<String,String> match : matches) {
-            matchData.addElement("[" + dateFormatter.format(date) + "] " + "Auctioneer: " + match.get("Seller") +
-                                                                                    " - " + match.get("Match") +
-                                                                                    " - " + match.get("Auction"));
+            String pattern = match.get("Match");
+            String name = match.get("Seller");
+            String auction = match.get("Auction");
+
+            matchData.addElement(dateString + "Auctioneer: " + name + " - " + pattern + " - " + auction);
         }
-//        for(Component comp : tabs.getComponents()) {
-//            comp.update(frame.getGraphics());
-//        }
     }
 
     @Override

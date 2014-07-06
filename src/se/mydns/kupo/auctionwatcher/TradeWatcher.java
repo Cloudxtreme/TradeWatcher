@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,11 +17,11 @@ import java.util.logging.Logger;
  */
 class TradeWatcher {
     private final ArrayList<String> lines = new ArrayList<>();
-    private ArrayList<HashMap<String,String>> auctions = new ArrayList<>();
+    private ArrayList<HashMap<String, String>> auctions = new ArrayList<>();
     private final AuctionMatcher matcher = new AuctionMatcher();
     private final AuctionParser parser = new AuctionParser();
     private ArrayList<HashMap<String, String>> newMatches = new ArrayList<>();
-    private ArrayList<HashMap<String,String>> matches = new ArrayList<>();
+    private List<HashMap<String, String>> matches = new CopyOnWriteArrayList<>();
     private TradeWatcherFrame frame;
     private Logger log = Logger.getLogger(TradeWatcher.class.getName());
 
@@ -33,18 +34,20 @@ class TradeWatcher {
     private void match() {
         newMatches.clear();
         boolean paus = false;
-        while(!paus) {
+        while (!paus) {
             getAuctionFeed();
             parse();
             frame.addStatus("Matching patterns.");
 
             newMatches = matcher.checkAuctions(auctions);
-            // Ugly hack to avoid concurrency exceptions. fix properly later!
-            try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
             addMatches();
 
             // Sleep until next check
-            try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -52,24 +55,31 @@ class TradeWatcher {
 
     private void addMatches() {
         if (!newMatches.isEmpty()) {
-            ArrayList<HashMap<String, String>> temp = (ArrayList<HashMap<String, String>>) matches.clone();
-            for(HashMap<String, String> newMatch : newMatches) {
-                boolean gotPreviousMatch = false;
-                for(HashMap<String, String> oldMatch : temp) {
-                    if(newMatch.get("Seller").equals(oldMatch.get("Seller")) &&
-                            newMatch.get("Match").equals(oldMatch.get("Match"))) {
-                        temp.remove(oldMatch);
-                        temp.add(newMatch);
-                        gotPreviousMatch = true;
+
+            for (HashMap<String, String> newMatch : newMatches) {
+                boolean gotMatch = false;
+                if (matches.isEmpty()) {
+                    matches.add(newMatch);
+                    frame.notify(newMatch);
+                } else {
+                    for (HashMap<String, String> oldMatch : matches) {
+                        if (newMatch.get("Seller").equals(oldMatch.get("Seller")) &&
+                                newMatch.get("Match").equals(oldMatch.get("Match"))) {
+                            matches.remove(oldMatch);
+                            matches.add(newMatch);
+                            gotMatch = true;
+                        }
+
+
+                    }
+                    if (!gotMatch) {
+                        matches.add(newMatch);
+                        frame.notify(newMatch);
                     }
                 }
-                if(!gotPreviousMatch) {
-                    temp.add(newMatch);
-                    frame.notify(newMatch);
-                }
             }
-            newMatches.clear();
-            matches = (ArrayList<HashMap<String, String>>) temp.clone();
+
+            System.out.println(matches.size());
             frame.updateMatches(matches);
         }
     }
@@ -134,11 +144,12 @@ class TradeWatcher {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
             String inputLine;
-            while((inputLine = in.readLine()) != null)  {
+            while ((inputLine = in.readLine()) != null) {
                 lines.add(inputLine);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) { e.printStackTrace(); }
     }
 
     public static void main(String args[]) {
