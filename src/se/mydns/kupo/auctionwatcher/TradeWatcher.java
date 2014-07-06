@@ -79,7 +79,6 @@ class TradeWatcher {
                 }
             }
 
-            System.out.println(matches.size());
             frame.updateMatches(matches);
         }
     }
