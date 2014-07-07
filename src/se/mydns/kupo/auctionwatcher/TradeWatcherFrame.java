@@ -1,6 +1,5 @@
 package se.mydns.kupo.auctionwatcher;
 
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
@@ -10,12 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * GUI for the TradeWatcher
@@ -38,6 +35,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private AuctionMatcher matcher;
     private JScrollPane statusScrollPane;
     private AudioStream as;
+    private TradeWatcherPreferences prefs = new TradeWatcherPreferences();
 
     public TradeWatcherFrame(AuctionMatcher matcher) {
 
@@ -90,7 +88,6 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 //        /** Notification Audio **/
-//        Media media = new Media("file:///c|\\Users\\oskurot\\IdeaProjects\\P99AuctionWatchList\\res\\notify.mp3");
         try {
 
             String notificationFile = "." + slash + "res" + slash + "notify.wav";
@@ -185,11 +182,8 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
     public void addStatus(String message) {
         Date date = new Date();
-        int newIndex = statusData.size();
         statusData.addElement("[" + dateFormatter.format(date) + "] " + message);
-//        statusBar.setSelectedIndex(newIndex);
-//        statusBar.ensureIndexIsVisible(newIndex);
-//        statusScrollPane.revalidate();
+        statusBar.ensureIndexIsVisible(statusData.size());
     }
 
     public void addWtsItem(String item) {
@@ -219,8 +213,13 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     }
 
     public void notify(HashMap<String, String> match) {
-        trayIcon.displayMessage("Match found!", "Auctioneer: " + match.get("Seller") + " - Match: " + match.get("Match"), TrayIcon.MessageType.INFO);
-        AudioPlayer.player.start(as);
+        String info = "Auctioneer: " + match.get("Seller") + " - Match: " + match.get("Match");
+        if(prefs.useNotificationPopup())
+            trayIcon.displayMessage("Match found!", info, TrayIcon.MessageType.INFO);
+        if(prefs.useNotificationAudio())
+            AudioPlayer.player.start(as);
+
+        addStatus(info);
     }
 
     public void updateMatches(java.util.List<HashMap<String, String>> matches) {

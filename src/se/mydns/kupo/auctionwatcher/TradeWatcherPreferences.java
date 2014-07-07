@@ -36,6 +36,20 @@ public class TradeWatcherPreferences {
 //        }
     }
 
+    public boolean useNotificationPopup() {
+        if(properties.get("notification.popup").equals("true"))
+            return true;
+        else
+            return false;
+    }
+
+    public boolean useNotificationAudio() {
+        if(properties.get("notification.audio").equals("true"))
+            return true;
+        else
+            return false;
+    }
+
     public Properties getPrefs() {
         return properties;
     }
@@ -51,6 +65,15 @@ public class TradeWatcherPreferences {
 
     public void setNotificationPopup(boolean notificationPopup) {
         if(notificationPopup)
+            properties.setProperty("notification.popup", "true");
+        else
+            properties.setProperty("notification.popup", "false");
+
+        writePreferences();
+    }
+
+    public void setNotificationAudio(boolean notificationAudio) {
+        if(notificationAudio)
             properties.setProperty("notification.popup", "true");
         else
             properties.setProperty("notification.popup", "false");
