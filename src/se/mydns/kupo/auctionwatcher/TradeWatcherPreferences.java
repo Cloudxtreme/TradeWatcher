@@ -23,6 +23,7 @@ public class TradeWatcherPreferences {
             // properties file does not exist. not preferences to read. Set some defaults.
             properties.setProperty("notification.popup", "true");
             properties.setProperty("notification.audio", "false");
+            writePreferences();
         } else {
             try {
                 properties.load(new FileInputStream(f));
