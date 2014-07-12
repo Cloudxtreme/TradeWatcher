@@ -1,14 +1,8 @@
 package se.mydns.kupo.auctionwatcher;
 
-import javafx.scene.media.MediaPlayer;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
-
 import javax.swing.*;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileInputStream;
@@ -31,12 +25,6 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private DefaultListModel<String> wtbData = new DefaultListModel<>();
     private JList<ArrayList<String>> wtbList;
     private DefaultListModel<String> matchData = new DefaultListModel<>();
-    private Object[] matchColumns = {"Time",
-                                       "Auctioneer",
-                                       "Item pattern",
-                                       "Auction"};
-    private Object[][] matchTableData = {{"", "", "", ""}};
-    private JTable matchTable = new JTable(matchTableData,matchColumns);
     private TrayIcon trayIcon;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
     private JTabbedPane tabs;
@@ -58,7 +46,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     }
 
     private void setupSystemTray() {
-        /** System tray **/
+        /**
+         * System tray
+         **/
         if(SystemTray.isSupported()) {
             tray = SystemTray.getSystemTray();
 
@@ -89,26 +79,33 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     }
 
     private void setupWindow() {
-        /** New shiny window **/
+        /**
+         * New shiny window
+         **/
         frame = new JFrame("Project 1999 Trade Watcher");
         frame.setPreferredSize(new Dimension(600, 350));
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage("." + slash + "res" + slash + "eq.png"));
         frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-//        /** Notification Audio **/
+        /**
+         * Notification Audio
+         **/
         try {
             String notificationFile = "." + slash + "res" + slash + "notify.wav";
             InputStream is = new FileInputStream(notificationFile);
             as = new AudioStream(is);
         } catch (Exception e) { System.out.println("Could not load notification audio."); e.printStackTrace(); }
-//        mediaPlayer = new MediaPlayer(media);
 
-        /** Layout **/
+        /**
+         * Layout
+         **/
         BorderLayout layout = new BorderLayout(5,5);
         frame.setLayout(layout);
 
-        /** Menubar **/
+        /**
+         * Menubar
+         **/
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
         menu.setMnemonic('f');
@@ -125,7 +122,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         menu.add(exitMenuItem);
         menu.add(options);
 
-        /** Panels for the borderlayout **/
+        /**
+         * Panels for the borderlayout
+         **/
         JPanel bottomPanel = new JPanel();
         bottomPanel.setPreferredSize(new Dimension(200,50));
         JPanel leftPanel = new JPanel();
@@ -142,15 +141,19 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         rightPanel.setLayout(new BorderLayout());
         bottomPanel.setLayout(new BorderLayout());
 
-        /** Matches panel **/
+        /**
+         * Matches panel
+         **/
         JList<ArrayList<String>> matchList = new JList(matchData);
-        JScrollPane matchPane = new JScrollPane(matchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane matchPane = new JScrollPane(matchList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         rightPanel.add(matchPane, BorderLayout.CENTER);
         JLabel matchLabel = new JLabel("Matches:");
         rightPanel.add(matchLabel, BorderLayout.NORTH);
         matchPane.setPreferredSize(rightPanel.getPreferredSize());
 
-        /** buy/sell tabs and lists **/
+        /**
+         * buy/sell tabs and lists
+         **/
         tabs = new JTabbedPane();
 
         wtsList = new JList(wtsData);
@@ -178,7 +181,9 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         leftPanel.add(tabs, BorderLayout.CENTER);
 
-        /** Status bar **/
+        /**
+         * Status bar
+         **/
         statusBar = new JList(statusData);
         statusScrollPane = new JScrollPane(statusBar, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         statusScrollPane.setPreferredSize(bottomPanel.getPreferredSize());
