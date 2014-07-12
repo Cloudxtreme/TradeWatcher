@@ -20,7 +20,7 @@ public class TradeWatcherPreferences {
 
     private void readPreferences() {
         if(!Files.isRegularFile(f.toPath())) {
-            // properties file does not exist. not preferences to read. Set some defaults.
+            // properties file does not exist. no preferences to read. Set some defaults.
             properties.setProperty("notification.popup", "true");
             properties.setProperty("notification.audio", "false");
             writePreferences();
@@ -31,10 +31,6 @@ public class TradeWatcherPreferences {
                 e.printStackTrace();
             }
         }
-//        for(String key : properties.stringPropertyNames()) {
-//            String value = properties.getProperty(key);
-//            System.out.println(key + " => " + value);
-//        }
     }
 
     public boolean useNotificationPopup() {

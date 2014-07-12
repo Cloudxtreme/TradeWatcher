@@ -5,6 +5,9 @@ import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -28,14 +31,20 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private DefaultListModel<String> wtbData = new DefaultListModel<>();
     private JList<ArrayList<String>> wtbList;
     private DefaultListModel<String> matchData = new DefaultListModel<>();
+    private Object[] matchColumns = {"Time",
+                                       "Auctioneer",
+                                       "Item pattern",
+                                       "Auction"};
+    private Object[][] matchTableData = {{"", "", "", ""}};
+    private JTable matchTable = new JTable(matchTableData,matchColumns);
     private TrayIcon trayIcon;
     private SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
-    private MediaPlayer mediaPlayer;
     private JTabbedPane tabs;
     private AuctionMatcher matcher;
     private JScrollPane statusScrollPane;
     private AudioStream as;
     private TradeWatcherPreferences prefs = new TradeWatcherPreferences();
+    private SystemTray tray;
 
     public TradeWatcherFrame(AuctionMatcher matcher) {
 
@@ -51,7 +60,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
     private void setupSystemTray() {
         /** System tray **/
         if(SystemTray.isSupported()) {
-            SystemTray tray = SystemTray.getSystemTray();
+            tray = SystemTray.getSystemTray();
 
             ActionListener listener = new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -89,7 +98,6 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
 //        /** Notification Audio **/
         try {
-
             String notificationFile = "." + slash + "res" + slash + "notify.wav";
             InputStream is = new FileInputStream(notificationFile);
             as = new AudioStream(is);
@@ -136,7 +144,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
         /** Matches panel **/
         JList<ArrayList<String>> matchList = new JList(matchData);
-        JScrollPane matchPane = new JScrollPane(matchList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane matchPane = new JScrollPane(matchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         rightPanel.add(matchPane, BorderLayout.CENTER);
         JLabel matchLabel = new JLabel("Matches:");
         rightPanel.add(matchLabel, BorderLayout.NORTH);
@@ -217,6 +225,8 @@ class TradeWatcherFrame implements Runnable, ActionListener {
         if(prefs.useNotificationPopup())
             trayIcon.displayMessage("Match found!", info, TrayIcon.MessageType.INFO);
         if(prefs.useNotificationAudio())
+            System.nanoTime();
+            as.getLength();
             AudioPlayer.player.start(as);
 
         addStatus(info);
@@ -276,8 +286,11 @@ class TradeWatcherFrame implements Runnable, ActionListener {
                 }
                 break;
             case "Exit":
+                tray.remove(trayIcon);
                 System.exit(0);
         }
     }
+
+
 }
 

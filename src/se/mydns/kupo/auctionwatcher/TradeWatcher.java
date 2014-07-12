@@ -89,12 +89,14 @@ class TradeWatcher {
     }
 
     private void setup() {
+        // Set native look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         } catch (Exception e) {
             log.log(Level.INFO, "Couldn't set system look and feel.");
         }
+
         frame = new TradeWatcherFrame(matcher);
         populateMatcher();
     }

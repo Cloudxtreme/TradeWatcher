@@ -1,4 +1,6 @@
+- Fix bug that causes timstamp of matches to get updates in each iteration
 - Put matches in a JTable
+- Fix that notification sounds only plays sometimes.
 - Re-create UI in JavaFX
 - Ability to clear old matches. (cleared on age as well?)
 - Change matches syntax to "timestamp - matching pattern". add ahungrys time and actual auction line to mouse over tooltip.
