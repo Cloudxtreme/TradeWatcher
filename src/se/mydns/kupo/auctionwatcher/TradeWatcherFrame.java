@@ -264,11 +264,13 @@ class TradeWatcherFrame implements Runnable, ActionListener {
                     if (!item.isEmpty()) {
                         matcher.addSellingPattern(item);
                         addWtsItem(item);
+                        WatchListReaderWriter.addWtsItem(item);
                     }
                 } else {
                     if (item != null) {
                         matcher.addShoppingPattern(item);
                         addWtbItem(item);
+                        WatchListReaderWriter.addWtbItem(item);
                     }
                 }
                 break;
@@ -276,17 +278,21 @@ class TradeWatcherFrame implements Runnable, ActionListener {
 
                 if (tab.getName().equals("WTS")) {
                     Object selected = wtsList.getSelectedValue();
+                    String line = (String) selected;
 
-                    if (selected != null) {
-                        matcher.delSellingPattern((String) selected);
-                        delWtsItem((String) selected);
+                    if (line != null) {
+                        matcher.delSellingPattern(line);
+                        delWtsItem(line);
+                        WatchListReaderWriter.delWtsItem(line);
                     }
                 } else {
                     Object selected = wtbList.getSelectedValue();
+                    String line = (String) selected;
 
-                    if (selected != null) {
-                        matcher.delShoppingPattern((String) selected);
-                        delWtbItem((String) selected);
+                    if (line != null) {
+                        matcher.delShoppingPattern(line);
+                        delWtbItem(line);
+                        WatchListReaderWriter.delWtbItem(line);
                     }
                 }
                 break;
