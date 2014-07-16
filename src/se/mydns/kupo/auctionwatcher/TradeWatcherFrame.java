@@ -107,20 +107,55 @@ class TradeWatcherFrame implements Runnable, ActionListener {
          * Menubar
          **/
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("File");
-        menu.setMnemonic('f');
-        menuBar.add(menu);
-        JMenuItem optionsMenuItem = new JMenuItem("Options");
-        JCheckBoxMenuItem options = new JCheckBoxMenuItem("Audio notification");
 
-        optionsMenuItem.setMnemonic('o');
-        optionsMenuItem.addActionListener(this);
+        JMenu menu = new JMenu("File");
+        menu.setMnemonic(KeyEvent.VK_F);
+
+        JMenu optionsMenu = new JMenu("Options");
+        optionsMenu.setMnemonic(KeyEvent.VK_O);
+        menu.add(optionsMenu);
+
+        JCheckBoxMenuItem audioToggle = new JCheckBoxMenuItem("Audio notification");
+        JCheckBox box = new JCheckBox("Audio notification", prefs.useNotificationAudio());
+        audioToggle.add(box);
+        optionsMenu.add(audioToggle);
+        box.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox cb = (JCheckBox) e.getSource();
+                boolean newstate = !prefs.useNotificationAudio();
+                cb.setBorderPainted(newstate);
+                prefs.setNotificationAudio(newstate);
+            }
+        });
+
+        JCheckBoxMenuItem popupToggle = new JCheckBoxMenuItem();
+        JCheckBox pbox = new JCheckBox("Popup Notification", prefs.useNotificationPopup());
+        popupToggle.add(pbox);
+        optionsMenu.add(popupToggle);
+        pbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox cb = (JCheckBox) e.getSource();
+                boolean newstate = !prefs.useNotificationPopup();
+                cb.setBorderPainted(newstate);
+                prefs.setNotificationPopup(newstate);
+            }
+        });
+
         JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.addActionListener(this);
-        menu.add(optionsMenuItem);
+        exitMenuItem.setMnemonic(KeyEvent.VK_X);
         menu.add(exitMenuItem);
-        menu.add(options);
+        exitMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tray.remove(trayIcon);
+                System.exit(0);
+            }
+        });
+
+        menuBar.add(menu);
+
 
         /**
          * Panels for the borderlayout
@@ -296,10 +331,7 @@ class TradeWatcherFrame implements Runnable, ActionListener {
                     }
                 }
                 break;
-            case "Exit":
-                tray.remove(trayIcon);
-                System.exit(0);
-        }
+          }
     }
 
 
